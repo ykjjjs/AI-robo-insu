@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>건강 변화 트래커 — SNUBH 5대질환 예측</title>
+<style>
+:root{
+  --bg:#0d1117; --surface:#161b22; --surface2:#21262d; --border:#30363d;
+  --text:#e6edf3; --muted:#8b949e; --accent:#58a6ff; --green:#3fb950;
+  --yellow:#d29922; --red:#f85149; --purple:#bc8cff; --orange:#ffa657;
+  --teal:#39d353; --pink:#ff7b72;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;min-height:100vh}
+/* ── Header ── */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.header h1{font-size:18px;font-weight:700;flex:1}
+.header h1 span{color:var(--accent)}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;padding:6px 12px;border-radius:6px;transition:.2s}
+.nav-links a:hover{background:var(--surface2);color:var(--text)}
+/* ── Layout ── */
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}}
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-title{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.card h2{font-size:18px;font-weight:700;margin-bottom:4px}
+/* ── Profile banner ── */
+.profile-banner{background:linear-gradient(135deg,#1c2d4a 0%,#1a2638 100%);border:1px solid #2d4a7a;border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:20px;margin-bottom:20px}
+.profile-avatar{width:52px;height:52px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.profile-info h2{font-size:20px;font-weight:700}
+.profile-info p{color:var(--muted);font-size:13px;margin-top:2px}
+.profile-meta{margin-left:auto;text-align:right;font-size:12px;color:var(--muted)}
+.profile-meta strong{color:var(--text);font-size:14px;display:block}
+/* ── Streak badges ── */
+.streak-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.streak-badge{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;text-align:center;min-width:90px}
+.streak-badge .num{font-size:24px;font-weight:800;line-height:1}
+.streak-badge .lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.streak-badge.active{border-color:var(--green);background:#0d2117}
+.streak-badge.active .num{color:var(--green)}
+/* ── Risk meter ── */
+.risk-bar-wrap{margin:8px 0}
+.risk-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
+.risk-bar-track{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.risk-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.risk-low{background:var(--green)} .risk-mid{background:var(--yellow)} .risk-high{background:var(--red)}
+/* ── Form ── */
+.form-section{margin-bottom:20px}
+.form-section h3{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.form-row.full{grid-template-columns:1fr}
+@media(max-width:480px){.form-row{grid-template-columns:1fr}}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.field input,.field select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:14px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.field .unit{font-size:11px;color:var(--muted);margin-top:2px}
+/* ── Toggle ── */
+.toggle-row{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.toggle-row button{flex:1;padding:7px;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:13px;transition:.2s}
+.toggle-row button.active{background:var(--accent);color:#000;font-weight:600}
+/* ── Buttons ── */
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:.2s}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:#79b8ff}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text)}
+.btn-green{background:var(--green);color:#000}
+.btn-green:hover{background:#4fd665}
+/* ── Chart ── */
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{display:block}
+/* ── Table ── */
+.log-table{width:100%;border-collapse:collapse;font-size:13px}
+.log-table th{color:var(--muted);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+.log-table td{padding:7px 8px;border-bottom:1px solid var(--border)20}
+.log-table tr:hover td{background:var(--surface2)}
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:#000a;z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:460px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h2{font-size:18px;margin-bottom:18px}
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 20px;border-radius:8px;font-weight:600;font-size:14px;z-index:300;transform:translateY(100px);opacity:0;transition:.4s}
+.toast.show{transform:translateY(0);opacity:1}
+/* ── Misc ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-green{background:#0d2117;color:var(--green);border:1px solid #1f5c35}
+.badge-yellow{background:#2d1f05;color:var(--yellow);border:1px solid #6b4c06}
+.badge-red{background:#2d0f0f;color:var(--red);border:1px solid #6b1515}
+.section-gap{margin-bottom:24px}
+.tip{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6}
+.delta-pos{color:var(--green);font-size:12px} .delta-neg{color:var(--red);font-size:12px} .delta-neu{color:var(--muted);font-size:12px}
+/* ── Setup screen ── */
+#setup-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.setup-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;max-width:480px;width:100%}
+.setup-card h1{font-size:24px;font-weight:800;margin-bottom:6px}
+.setup-card .sub{color:var(--muted);margin-bottom:28px;font-size:14px;line-height:1.6}
+.setup-field{margin-bottom:16px}
+.setup-field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.setup-field input,.setup-field select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:15px}
+.setup-field input:focus,.setup-field select:focus{outline:none;border-color:var(--accent)}
+.disease-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.disease-opt{padding:10px;border:2px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;font-size:13px;transition:.2s;background:var(--surface2)}
+.disease-opt:hover{border-color:var(--accent)40;background:#1c2d4a}
+.disease-opt.sel{border-color:var(--accent);background:#1c2d4a;color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="setup-screen" style="display:none">
+<div class="setup-card">
+<h1>🌱 건강 트래커 시작</h1>
+<p class="sub">주간 건강지표를 기록하고 생활습관 변화가<br>질환 위험도에 미치는 영향을 추적합니다.</p>
+<div class="setup-field">
+<label>이름 (닉네임)</label>
+<input id="sp-name" placeholder="예: 홍길동" maxlength="20">
+</div>
+<div class="setup-field">
+<label>추적할 목표 질환</label>
+<div class="disease-grid">
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="심혈관질환">❤️ 심혈관질환</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="뇌졸중">🧠 뇌졸중</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="당뇨">🩸 당뇨</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="파킨슨">🫀 파킨슨</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="알츠하이머">💜 알츠하이머</div>
+</div>
+</div>
+<div class="setup-field">
+<label>시작 날짜</label>
+<input type="date" id="sp-date">
+</div>
+<div class="setup-field">
+<label>현재 체중 (kg)</label>
+<input type="number" id="sp-weight" placeholder="70" min="30" max="200">
+</div>
+<button class="btn btn-primary" style="width:100%;padding:14px;font-size:16px;margin-top:8px" onclick="saveProfile()">트래커 시작하기 →</button>
+<p class="tip" style="margin-top:16px;text-align:center">모든 데이터는 이 기기에만 저장됩니다. 언제든 초기화 가능.</p>
+</div>
+</div>
+<div id="main-app" style="display:none">
+<div class="header">
+<span style="font-size:22px">📊</span>
+<h1>건강 트래커 <span>— SNUBH 5대질환</span></h1>
+<div class="nav-links">
+<a href="index.html">← 예측 시뮬레이터</a>
+<a href="AI_Robo_insurance.html" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
+</div>
+</div>
+<div class="container">
+<div class="profile-banner" id="profile-banner">
+<div class="profile-avatar" id="prof-icon">🌱</div>
+<div class="profile-info">
+<h2 id="prof-name">—</h2>
+<p id="prof-disease">목표 질환: —</p>
+</div>
+<div class="profile-meta">
+<span>추적 기간</span>
+<strong id="prof-days">0일째</strong>
+<span style="display:block;margin-top:6px">총 기록</span>
+<strong id="prof-logs">0회</strong>
+</div>
+</div>
+<div class="streak-row" id="streak-row">
+<div class="streak-badge" id="str-exercise"><div class="num">0</div><div class="lbl">🏃 운동 연속</div></div>
+<div class="streak-badge" id="str-nosmoking"><div class="num">0</div><div class="lbl">🚭 금연 연속</div></div>
+<div class="streak-badge" id="str-alcohol"><div class="num">0</div><div class="lbl">🍃 절주 연속</div></div>
+<div class="streak-badge" id="str-diet"><div class="num">0</div><div class="lbl">🥗 식단 연속</div></div>
+</div>
+<div class="grid-3 section-gap" id="risk-cards">
+<div class="card">
+<div class="card-title">❤️ 심혈관 위험도</div>
+<div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-cardio-val">—</div>
+<div class="risk-bar-wrap">
+<div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
+<div class="risk-bar-track"><div class="risk-bar-fill" id="risk-cardio-bar" style="width:0%"></div></div>
+</div>
+<div id="risk-cardio-delta" class="delta-neu" style="margin-top:6px;font-size:12px">베이스라인 대비: —</div>
+</div>
+<div class="card">
+<div class="card-title">🧠 뇌졸중 위험도</div>
+<div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-stroke-val">—</div>
+<div class="risk-bar-wrap">
+<div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
+<div class="risk-bar-track"><div class="risk-bar-fill" id="risk-stroke-bar" style="width:0%"></div></div>
+</div>
+<div id="risk-stroke-delta" class="delta-neu" style="margin-top:6px;font-size:12px">베이스라인 대비: —</div>
+</div>
+<div class="card">
+<div class="card-title">🩸 당뇨 위험도</div>
+<div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-diabetes-val">—</div>
+<div class="risk-bar-wrap">
+<div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
+<div class="risk-bar-track"><div class="risk-bar-fill" id="risk-diabetes-bar" style="width:0%"></div></div>
+</div>
+<div id="risk-diabetes-delta" class="delta-neu" style="margin-top:6px;font-size:12px">베이스라인 대비: —</div>
+</div>
+</div>
+<div class="grid-2 section-gap">
+<div class="card">
+<div class="card-title">📈 주간 생활지표 추이</div>
+<div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap" id="metric-btns">
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('weight','#58a6ff')" id="mbtn-weight">체중</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('exercise','#3fb950')" id="mbtn-exercise">운동지수</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('alcohol','#ffa657')" id="mbtn-alcohol">음주지수</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('stress','#f85149')" id="mbtn-stress">스트레스</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('diet','#bc8cff')" id="mbtn-diet">식단점수</button>
+</div>
+<div class="chart-wrap"><svg id="trend-svg" width="100%" viewBox="0 0 480 200"></svg></div>
+<p class="tip" id="trend-tip">지표를 선택하면 주간 추이를 볼 수 있습니다.</p>
+</div>
+<div class="card">
+<div class="card-title">🎯 위험도 변화 추이</div>
+<div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap" id="risk-btns">
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setRiskChart('cardio','#f85149')" id="rbtn-cardio">심혈관</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setRiskChart('stroke','#ffa657')" id="rbtn-stroke">뇌졸중</button>
+<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setRiskChart('diabetes','#d29922')" id="rbtn-diabetes">당뇨</button>
+</div>
+<div class="chart-wrap"><svg id="risk-svg" width="100%" viewBox="0 0 480 200"></svg></div>
+<p class="tip" id="risk-tip">질환을 선택하면 위험도 변화를 볼 수 있습니다.</p>
+</div>
+</div>
+<div class="card section-gap">
+<div class="card-title">📝 이번 주 기록 입력</div>
+<div id="already-logged-banner" style="display:none;background:#0d2117;border:1px solid var(--green);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--green)">✅ 이번 주 기록이 이미 있습니다. 수정하려면 아래에서 덮어씁니다.</div>
+<div class="form-section">
+<h3>🏋️ 신체 & 운동</h3>
+<div class="form-row">
+<div class="field"><label>체중 (kg)</label><input type="number" id="f-weight" placeholder="70.0" step="0.1" min="30" max="200"></div>
+<div class="field"><label>허리둘레 (cm, 선택)</label><input type="number" id="f-waist" placeholder="80" min="40" max="200"></div>
+</div>
+<div class="form-row">
+<div class="field"><label>운동 횟수 (회/주)</label><input type="number" id="f-exdays" placeholder="3" min="0" max="7" oninput="calcWeeklyEx()"></div>
+<div class="field"><label>운동 시간 (분/회)</label><input type="number" id="f-exmins" placeholder="30" min="0" max="300" oninput="calcWeeklyEx()"></div>
+</div>
+<div class="form-row">
+<div class="field"><label>운동 강도</label>
+<select id="f-exint" onchange="calcWeeklyEx()">
+<option value="3.5">가벼운 (산책, 스트레칭)</option>
+<option value="5.0" selected>중간 (빠른걷기, 자전거)</option>
+<option value="7.5">격렬 (달리기, 수영)</option>
+<option value="9.0">고강도 (HIIT, 운동선수)</option>
+</select></div>
+<div class="field"><label>주간 운동지수</label>
+<div id="ex-preview" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:15px;font-weight:700;color:var(--green)">—</div>
+</div></div>
+</div>
+<div class="form-section">
+<h3>🚭 흡연 & 음주</h3>
+<div class="form-row">
+<div class="field"><label>흡연 여부</label>
+<div class="toggle-row">
+<button id="smoke-no" class="active" onclick="setSmoking(false)">🚭 비흡연</button>
+<button id="smoke-yes" onclick="setSmoking(true)">🚬 흡연 중</button>
+</div></div>
+<div class="field"><label>이번 주 총 음주량 (잔)</label><input type="number" id="f-alcohol" placeholder="0" min="0" max="100" oninput="calcWeeklyAlc()"></div>
+</div>
+<div id="alc-preview" style="margin-top:4px;font-size:12px;color:var(--muted)"></div>
+</div>
+<div class="form-section">
+<h3>🥗 식단 & 카페인</h3>
+<div class="form-row">
+<div class="field"><label>나쁜 식습관 (0-10)</label>
+<input type="range" id="f-bad-diet" min="0" max="10" value="5" oninput="updateDietPreview()">
+<div class="unit" id="bad-diet-lbl">5 — 인스턴트/탄산/기름진 음식 보통</div>
+</div>
+<div class="field"><label>좋은 식습관 (0-10)</label>
+<input type="range" id="f-good-diet" min="0" max="10" value="5" oninput="updateDietPreview()">
+<div class="unit" id="good-diet-lbl">5 — 채소/균형식단 보통</div>
+</div>
+</div>
+<div class="form-row">
+<div class="field"><label>카페인 (잔/일)</label><input type="number" id="f-caffeine" placeholder="2" min="0" max="20"></div>
+<div class="field"><label>식단 종합점수</label>
+<div id="diet-preview" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:15px;font-weight:700;color:var(--purple)">—</div>
+</div></div>
+</div>
+<div class="form-section">
+<h3>🧠 컨디션 & 스트레스</h3>
+<div class="form-row">
+<div class="field"><label>주관적 컨디션 (1-10)</label><input type="range" id="f-condition" min="1" max="10" value="6" oninput="document.getElementById('cond-lbl').textContent=this.value+' / 10'">
+<div class="unit" id="cond-lbl">6 / 10</div>
+</div>
+<div class="field"><label>스트레스 수준 (1-5)</label>
+<div class="toggle-row" id="stress-row">
+<button onclick="setStress(1)" id="strbtn-1">1</button>
+<button onclick="setStress(2)" id="strbtn-2">2</button>
+<button onclick="setStress(3)" id="strbtn-3">3</button>
+<button onclick="setStress(4)" id="strbtn-4">4</button>
+<button onclick="setStress(5)" id="strbtn-5">5</button>
+</div>
+<div class="unit" id="stress-lbl">3 — 보통</div>
+</div>
+</div>
+<div class="form-row full">
+<div class="field"><label>메모 (자유롭게)</label>
+<input id="f-memo" placeholder="이번 주 건강 변화, 느낀 점 등을 자유롭게 기록..." maxlength="200">
+</div></div>
+</div>
+<div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px">
+<button class="btn btn-ghost" onclick="clearForm()">초기화</button>
+<button class="btn btn-green" onclick="saveLog()">💾 이번 주 저장</button>
+</div>
+</div>
+<div class="card section-gap">
+<div style="display:flex;align-items:center;margin-bottom:16px">
+<div class="card-title" style="margin-bottom:0;flex:1">📅 기록 히스토리</div>
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="exportCSV()">CSV 내보내기</button>
+</div>
+<div style="overflow-x:auto">
+<table class="log-table">
+<thead><tr>
+<th>날짜</th>
+<th>체중</th>
+<th>운동지수</th>
+<th>음주(잔)</th>
+<th>식단</th>
+<th>스트레스</th>
+<th>흡연</th>
+<th>조언</th>
+</tr></thead>
+<tbody id="log-tbody"></tbody>
+</table>
+</div>
+<p class="tip" id="no-logs-tip" style="text-align:center;padding:24px 0">아직 기록이 없습니다. 위 양식을 작성하고 저장하세요.</p>
+</div>
+<div class="card section-gap">
+<div class="card-title">💡 AI 건강 인사이트</div>
+<div id="insight-panel">
+<p style="color:var(--muted);font-size:13px">기록이 2주 이상 쌓이면 개인화된 인사이트를 표시합니다.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let profile={},logs=[],baseline={};
+let currentMetric="exercise",currentMetricColor="#3fb950";
+let currentRisk="cardio",currentRiskColor="#f85149";
+let smokingState=false, stressVal=3;
+// ── index.html 예측 결과 → 트래커 동기화 헬퍼
+const DISEASE_MAP={cardio:"심혈관질환",stroke:"뇌졸중",diabetes:"당뇨",parkinson:"파킨슨",alzheimer:"알츠하이머"};
+const DISEASE_MAP_REV={"심혈관질환":"cardio","뇌졸중":"stroke","당뇨":"diabetes","파킨슨":"parkinson","알츠하이머":"alzheimer"};
+
+function importFromPredictor(){
+  const raw=localStorage.getItem("snubh_user_profile");
+  return raw?JSON.parse(raw):null;
+}
+
+function init(){
+  const p=localStorage.getItem("snubh_profile");
+  if(!p){showSetup();return;}
+  profile=JSON.parse(p);
+  logs=JSON.parse(localStorage.getItem("snubh_logs")||"[]");
+  baseline=JSON.parse(localStorage.getItem("snubh_baseline")||"{}");
+
+  // 예측기 데이터 최신화 — snubh_user_profile이 갱신됐으면 baseline도 업데이트
+  const sc=localStorage.getItem("snubh_last_scores");
+  if(sc){
+    const scObj=JSON.parse(sc);
+    // 날짜가 더 최신이면 baseline 갱신
+    if(!baseline.date||scObj.date>baseline.date){
+      baseline=scObj;
+      localStorage.setItem("snubh_baseline",JSON.stringify(baseline));
+    }
+  }
+
+  // 로그 form에 최신 예측 라이프스타일 값 자동 입력
+  prefillFormFromPredictor();
+  showMain();
+}
+
+function prefillFormFromPredictor(){
+  const prof=importFromPredictor();
+  if(!prof) return;
+  const setV=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.value=v;};
+  // 체중 (Stage 1에서 입력한 값)
+  if(prof.weight) setV("f-weight",prof.weight);
+  // 운동 일수·시간
+  if(prof.exDays!=null) setV("f-exdays",prof.exDays);
+  if(prof.exMin!=null)  setV("f-exmins",prof.exMin);
+  // 흡연
+  if(prof.smoking!=null) setSmoking(!!prof.smoking);
+  // 음주 — alcWeekly 근사 (주간 잔수)
+  if(prof.alcWeekly!=null) setV("f-alcohol",Math.round(prof.alcWeekly));
+  // 카페인
+  if(prof.caffeine!=null) setV("f-caffeine",prof.caffeine);
+  // 식단 슬라이더
+  if(prof.dietBadRaw!=null)  setV("f-bad-diet",prof.dietBadRaw);
+  if(prof.dietGoodRaw!=null) setV("f-good-diet",prof.dietGoodRaw);
+  // 스트레스 (1-5)
+  if(prof.stressLevel!=null) setStress(Math.min(5,Math.max(1,prof.stressLevel)));
+  // 운동지수 미리보기
+  calcWeeklyEx();
+  updateDietPreview();
+  calcWeeklyAlc();
+}
+
+function showSetup(){
+  document.getElementById("setup-screen").style.display="flex";
+  document.getElementById("main-app").style.display="none";
+  document.getElementById("sp-date").value=new Date().toISOString().slice(0,10);
+
+  // index.html에서 넘어온 예측 데이터가 있으면 setup form 자동 완성
+  const prof=importFromPredictor();
+  if(prof){
+    // 체중 자동 입력
+    if(prof.weight) document.getElementById("sp-weight").value=prof.weight;
+    // 최고위험 질환 자동 선택
+    if(prof.risks){
+      const sorted=Object.entries(prof.risks).sort((a,b)=>b[1]-a[1]);
+      // 상위 2개 질환 자동 선택
+      sorted.slice(0,2).forEach(([k])=>{
+        const korName=DISEASE_MAP[k];
+        const el=document.querySelector(`.disease-opt[data-d="${korName}"]`);
+        if(el&&!selectedDiseases.includes(korName)){
+          el.classList.add("sel");
+          selectedDiseases.push(korName);
+        }
+      });
+    }
+    // 배너 표시
+    showImportBanner(prof);
+  }
+}
+
+function showImportBanner(prof){
+  const existing=document.getElementById("import-banner");
+  if(existing)return;
+  const banner=document.createElement("div");
+  banner.id="import-banner";
+  banner.style.cssText="background:#1c2d4a;border:1px solid #2d4a7a;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#79b8ff;line-height:1.6";
+  const topD=DISEASE_MAP[prof.topDisease]||"—";
+  banner.innerHTML=`🔗 <strong>예측 시뮬레이터 데이터 감지</strong> — 나이 ${prof.age}세, BMI ${prof.bmi}, 최고위험 ${topD}<br>
+    <span style="color:#8b949e">목표 질환이 자동 선택되었습니다. 이름을 입력하고 시작하세요.</span>`;
+  const card=document.querySelector(".setup-card");
+  if(card) card.insertBefore(banner, card.querySelector("h1").nextSibling);
+}
+
+function showMain(){
+  document.getElementById("setup-screen").style.display="none";
+  document.getElementById("main-app").style.display="block";
+  renderProfile();
+  renderStreaks();
+  renderRiskCards();
+  renderTrendChart();
+  renderRiskChart();
+  renderLogTable();
+  renderInsights();
+  checkAlreadyLogged();
+  // 동기화 상태 배너
+  renderSyncStatus();
+}
+
+function renderSyncStatus(){
+  const prof=importFromPredictor();
+  const existing=document.getElementById("sync-status-bar");
+  if(existing) existing.remove();
+  if(!prof) return;
+  const bar=document.createElement("div");
+  bar.id="sync-status-bar";
+  bar.style.cssText="background:#1c2d4a;border:1px solid #2d4a7a;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap";
+  const dis=DISEASE_MAP[prof.topDisease]||"—";
+  bar.innerHTML=`<span style="font-size:16px">🔗</span>
+    <span style="color:#79b8ff"><strong>예측 시뮬레이터와 연결됨</strong> — ${prof.date} 예측 데이터 반영 중</span>
+    <span style="color:#8b949e">|</span>
+    <span style="color:#8b949e">최고위험: ${dis} ${Math.round((prof.risks?.[prof.topDisease]||0)*100)}%</span>
+    <span style="color:#8b949e">|</span>
+    <span style="color:#8b949e">운동지수 ${prof.exScore||0} · 스트레스 ${prof.stressScore||0}%</span>
+    <a href="index.html" style="margin-left:auto;color:#58a6ff;font-size:11px;text-decoration:none">→ 예측기에서 재측정</a>`;
+  const container=document.querySelector(".container");
+  if(container) container.insertBefore(bar, container.firstChild);
+}
+
+const selectedDiseases=[];
+function toggleDisease(el){
+  const d=el.dataset.d;
+  const i=selectedDiseases.indexOf(d);
+  if(i>=0){selectedDiseases.splice(i,1);el.classList.remove("sel");}
+  else{selectedDiseases.push(d);el.classList.add("sel");}
+}
+
+function saveProfile(){
+  const name=document.getElementById("sp-name").value.trim();
+  if(!name){alert("이름을 입력해주세요");return;}
+  if(!selectedDiseases.length){alert("목표 질환을 선택해주세요");return;}
+  const wt=parseFloat(document.getElementById("sp-weight").value)||70;
+  profile={name,diseases:selectedDiseases,startDate:document.getElementById("sp-date").value,weight:wt,created:Date.now()};
+  localStorage.setItem("snubh_profile",JSON.stringify(profile));
+
+  // 첫 저장 시 예측기 결과를 baseline으로 자동 설정
+  const sc=localStorage.getItem("snubh_last_scores");
+  if(sc&&!localStorage.getItem("snubh_baseline")){
+    localStorage.setItem("snubh_baseline",sc);
+    baseline=JSON.parse(sc);
+  }
+
+  showMain();
+}
+function renderProfile(){
+  if(!profile.name)return;
+  const icons={"심혈관질환":"❤️","뇌졸중":"🧠","당뇨":"🩸","파킨슨":"🫀","알츠하이머":"💜"};
+  document.getElementById("prof-icon").textContent=icons[profile.diseases[0]]||"🌱";
+  document.getElementById("prof-name").textContent=profile.name+" 님";
+  document.getElementById("prof-disease").textContent="목표: "+profile.diseases.join(", ");
+  const days=Math.floor((Date.now()-new Date(profile.startDate).getTime())/86400000);
+  document.getElementById("prof-days").textContent=Math.max(0,days)+"일째";
+  document.getElementById("prof-logs").textContent=logs.length+"회";
+}
+function renderStreaks(){
+  if(!logs.length)return;
+  const sorted=[...logs].sort((a,b)=>b.week.localeCompare(a.week));
+  // exercise streak: consecutive weeks with exScore>=30
+  let exStr=0,smStr=0,alStr=0,dtStr=0;
+  for(const l of sorted){
+    if(l.exScore>=30)exStr++;else break;
+  }
+  for(const l of sorted){
+    if(!l.smoking)smStr++;else break;
+  }
+  for(const l of sorted){
+    if((l.alcUnits||0)<=7)alStr++;else break;
+  }
+  for(const l of sorted){
+    if((l.dietScore||50)>=60)dtStr++;else break;
+  }
+  const setStreak=(id,n,goal)=>{
+    const el=document.getElementById(id);
+    el.querySelector(".num").textContent=n+"주";
+    if(n>0)el.classList.add("active");else el.classList.remove("active");
+  };
+  setStreak("str-exercise",exStr,4);
+  setStreak("str-nosmoking",smStr,12);
+  setStreak("str-alcohol",alStr,4);
+  setStreak("str-diet",dtStr,4);
+}
+function renderRiskCards(){
+  const defs={cardio:{key:"cardio",lbl:"심혈관"},stroke:{key:"stroke",lbl:"뇌졸중"},diabetes:{key:"diabetes",lbl:"당뇨"}};
+  for(const[k,d]of Object.entries(defs)){
+    const last=getLastRisk(k);
+    const base=baseline[k]||null;
+    const pct=last!=null?Math.round(last*100):null;
+    const valEl=document.getElementById(`risk-${k}-val`);
+    const barEl=document.getElementById(`risk-${k}-bar`);
+    const deltaEl=document.getElementById(`risk-${k}-delta`);
+    if(pct==null){valEl.textContent="—";continue;}
+    valEl.textContent=pct+"%";
+    barEl.style.width=pct+"%";
+    barEl.className="risk-bar-fill "+(pct<30?"risk-low":pct<60?"risk-mid":"risk-high");
+    if(base!=null){
+      const diff=Math.round((last-base)*100);
+      const sign=diff>0?"+":"";
+      deltaEl.textContent="베이스라인 대비: "+sign+diff+"%";
+      deltaEl.className=diff<=0?"delta-pos":"delta-neg";
+    }
+  }
+}
+function getLastRisk(key){
+  const sorted=[...logs].sort((a,b)=>b.week.localeCompare(a.week));
+  for(const l of sorted){
+    if(l.risks&&l.risks[key]!=null)return l.risks[key];
+  }
+  return baseline[key]!=null?baseline[key]:null;
+}
+function setMetric(m,c){
+  currentMetric=m;currentMetricColor=c;
+  document.querySelectorAll("#metric-btns .btn").forEach(b=>b.style.borderColor="");
+  const btn=document.getElementById("mbtn-"+m);
+  if(btn)btn.style.borderColor=c;
+  renderTrendChart();
+}
+function renderTrendChart(){
+  const svg=document.getElementById("trend-svg");
+  svg.innerHTML="";
+  if(!logs.length){document.getElementById("trend-tip").textContent="기록을 저장하면 추이 차트가 표시됩니다.";return;}
+  const sorted=[...logs].sort((a,b)=>a.week.localeCompare(b.week));
+  const W=480,H=200,pad={t:20,r:20,b:40,l:50};
+  const labels={"weight":"체중(kg)","exercise":"운동지수","alcohol":"음주(잔)","stress":"스트레스","diet":"식단점수"};
+  const getVal=(l)=>{
+    if(currentMetric==="weight")return l.weight||0;
+    if(currentMetric==="exercise")return l.exScore||0;
+    if(currentMetric==="alcohol")return l.alcUnits||0;
+    if(currentMetric==="stress")return(l.stress||3)*20;
+    if(currentMetric==="diet")return l.dietScore||0;
+    return 0;
+  };
+  const vals=sorted.map(getVal);
+  const mx=Math.max(...vals,1),mn=Math.min(...vals,0);
+  const range=mx-mn||1;
+  const x=(i)=>pad.l+(i/(sorted.length-1||1))*(W-pad.l-pad.r);
+  const y=(v)=>pad.t+(1-(v-mn)/range)*(H-pad.t-pad.b);
+  // grid lines
+  for(let g=0;g<=4;g++){
+    const gy=pad.t+g*(H-pad.t-pad.b)/4;
+    const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",pad.l);line.setAttribute("y1",gy);line.setAttribute("x2",W-pad.r);line.setAttribute("y2",gy);
+    line.setAttribute("stroke","#30363d");line.setAttribute("stroke-width","0.5");
+    svg.appendChild(line);
+    const tv=Math.round(mn+range*(1-g/4));
+    const tl=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tl.setAttribute("x",pad.l-6);tl.setAttribute("y",gy+4);tl.setAttribute("fill","#8b949e");
+    tl.setAttribute("text-anchor","end");tl.setAttribute("font-size","10");
+    tl.textContent=tv;svg.appendChild(tl);
+  }
+  // area fill
+  if(sorted.length>1){
+    const pts=sorted.map((_,i)=>`${x(i)},${y(vals[i])}`).join(" ");
+    const first=`${x(0)},${H-pad.b}`;const last=`${x(sorted.length-1)},${H-pad.b}`;
+    const poly=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points",first+" "+pts+" "+last);
+    poly.setAttribute("fill",currentMetricColor+"30");
+    svg.appendChild(poly);
+  }
+  // line
+  if(sorted.length>1){
+    const path=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+    path.setAttribute("points",sorted.map((_,i)=>`${x(i)},${y(vals[i])}`).join(" "));
+    path.setAttribute("fill","none");path.setAttribute("stroke",currentMetricColor);path.setAttribute("stroke-width","2");
+    svg.appendChild(path);
+  }
+  // dots + x labels
+  sorted.forEach((l,i)=>{
+    const cx=x(i),cy=y(vals[i]);
+    const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx",cx);c.setAttribute("cy",cy);c.setAttribute("r","4");
+    c.setAttribute("fill",currentMetricColor);c.setAttribute("stroke","#0d1117");c.setAttribute("stroke-width","2");
+    svg.appendChild(c);
+    const wk=l.week.slice(5);
+    const tl=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tl.setAttribute("x",cx);tl.setAttribute("y",H-pad.b+14);tl.setAttribute("fill","#8b949e");
+    tl.setAttribute("text-anchor","middle");tl.setAttribute("font-size","9");
+    tl.textContent=wk;svg.appendChild(tl);
+  });
+  document.getElementById("trend-tip").textContent=`${labels[currentMetric]||currentMetric} 추이 (${sorted.length}주 기록)`;
+}
+function setRiskChart(r,c){
+  currentRisk=r;currentRiskColor=c;
+  document.querySelectorAll("#risk-btns .btn").forEach(b=>b.style.borderColor="");
+  const btn=document.getElementById("rbtn-"+r);
+  if(btn)btn.style.borderColor=c;
+  renderRiskChart();
+}
+function renderRiskChart(){
+  const svg=document.getElementById("risk-svg");
+  svg.innerHTML="";
+  if(!logs.length){document.getElementById("risk-tip").textContent="기록을 저장하면 위험도 추이가 표시됩니다.";return;}
+  const sorted=[...logs].sort((a,b)=>a.week.localeCompare(b.week));
+  // Build risk series — estimate from lifestyle if no actual risk stored
+  const base=baseline[currentRisk]||0.4;
+  const vals=sorted.map(l=>{
+    if(l.risks&&l.risks[currentRisk]!=null)return l.risks[currentRisk];
+    // estimate: adjust baseline by lifestyle scores
+    const exAdj=-(l.exScore||0)/100*0.08;
+    const alcAdj=(l.alcUnits||0)/14*0.05;
+    const stressAdj=((l.stress||3)-3)/2*0.04;
+    const dietAdj=-((l.dietScore||50)-50)/100*0.06;
+    const smAdj=l.smoking?0.05:0;
+    return Math.max(0.02,Math.min(0.98,base+exAdj+alcAdj+stressAdj+dietAdj+smAdj));
+  });
+  // prepend baseline point
+  const allVals=[base,...vals];
+  const allLabels=["시작",...sorted.map(l=>l.week.slice(5))];
+  const W=480,H=200,pad={t:20,r:20,b:40,l:50};
+  const mx=Math.max(...allVals),mn=Math.min(...allVals,0);
+  const range=mx-mn||0.01;
+  const x=(i)=>pad.l+(i/(allVals.length-1||1))*(W-pad.l-pad.r);
+  const y=(v)=>pad.t+(1-(v-mn)/range)*(H-pad.t-pad.b);
+  // zones
+  const zones=[[0,0.3,"#3fb95020"],[0.3,0.6,"#d2992220"],[0.6,1,"#f8514920"]];
+  for(const[lo,hi,col]of zones){
+    const y1=y(Math.min(hi,mx+0.05));const y2=y(Math.max(lo,mn-0.05));
+    const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x",pad.l);rect.setAttribute("y",y1);
+    rect.setAttribute("width",W-pad.l-pad.r);rect.setAttribute("height",Math.abs(y2-y1));
+    rect.setAttribute("fill",col);svg.appendChild(rect);
+  }
+  // grid
+  for(let g=0;g<=4;g++){
+    const gy=pad.t+g*(H-pad.t-pad.b)/4;
+    const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",pad.l);line.setAttribute("y1",gy);line.setAttribute("x2",W-pad.r);line.setAttribute("y2",gy);
+    line.setAttribute("stroke","#30363d");line.setAttribute("stroke-width","0.5");
+    svg.appendChild(line);
+    const tv=Math.round((mn+range*(1-g/4))*100);
+    const tl=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tl.setAttribute("x",pad.l-6);tl.setAttribute("y",gy+4);tl.setAttribute("fill","#8b949e");
+    tl.setAttribute("text-anchor","end");tl.setAttribute("font-size","10");
+    tl.textContent=tv+"%";svg.appendChild(tl);
+  }
+  // area
+  if(allVals.length>1){
+    const pts=allVals.map((_,i)=>`${x(i)},${y(allVals[i])}`).join(" ");
+    const poly=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points",`${x(0)},${H-pad.b} ${pts} ${x(allVals.length-1)},${H-pad.b}`);
+    poly.setAttribute("fill",currentRiskColor+"30");svg.appendChild(poly);
+  }
+  // line
+  const path=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+  path.setAttribute("points",allVals.map((_,i)=>`${x(i)},${y(allVals[i])}`).join(" "));
+  path.setAttribute("fill","none");path.setAttribute("stroke",currentRiskColor);path.setAttribute("stroke-width","2");
+  svg.appendChild(path);
+  // dots
+  allVals.forEach((v,i)=>{
+    const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx",x(i));c.setAttribute("cy",y(v));c.setAttribute("r",i===0?"5":"4");
+    c.setAttribute("fill",i===0?"#8b949e":currentRiskColor);
+    c.setAttribute("stroke","#0d1117");c.setAttribute("stroke-width","2");
+    svg.appendChild(c);
+    const tl=document.createElementNS("http://www.w3.org/2000/svg","text");
+    tl.setAttribute("x",x(i));tl.setAttribute("y",H-pad.b+14);tl.setAttribute("fill","#8b949e");
+    tl.setAttribute("text-anchor","middle");tl.setAttribute("font-size","9");
+    tl.textContent=allLabels[i];svg.appendChild(tl);
+  });
+  const lastV=allVals[allVals.length-1];
+  const diff=Math.round((lastV-base)*100);
+  const sign=diff>0?"+":"";
+  document.getElementById("risk-tip").textContent=`현재 추정 위험도: ${Math.round(lastV*100)}% (시작 대비 ${sign}${diff}%)`;
+}
+function setSmoking(v){
+  smokingState=v;
+  document.getElementById("smoke-yes").className=v?"active":"";
+  document.getElementById("smoke-no").className=v?"":"active";
+}
+function setStress(v){
+  stressVal=v;
+  for(let i=1;i<=5;i++){
+    const b=document.getElementById("strbtn-"+i);
+    if(b)b.className=i<=v?"active":"";
+  }
+  const lbls=["","매우 낮음","낮음","보통","높음","매우 높음"];
+  document.getElementById("stress-lbl").textContent=v+" — "+(lbls[v]||"");
+}
+function calcWeeklyEx(){
+  const d=parseFloat(document.getElementById("f-exdays").value)||0;
+  const m=parseFloat(document.getElementById("f-exmins").value)||0;
+  const met=parseFloat(document.getElementById("f-exint").value)||5;
+  const score=Math.min(100,Math.round(d*m*met/472.5*100));
+  const el=document.getElementById("ex-preview");
+  el.textContent=score+" / 100";
+  el.style.color=score>=50?"#3fb950":score>=25?"#d29922":"#f85149";
+}
+function calcWeeklyAlc(){
+  const u=parseFloat(document.getElementById("f-alcohol").value)||0;
+  const el=document.getElementById("alc-preview");
+  if(u===0){el.textContent="이번 주 음주 없음 🎉";el.style.color="#3fb950";return;}
+  if(u<=7){el.textContent=`${u}잔 — 적정 수준`;el.style.color="#d29922";}
+  else if(u<=14){el.textContent=`${u}잔 — 주의 필요`;el.style.color="#ffa657";}
+  else{el.textContent=`${u}잔 — 과음. 심혈관·간 건강 위험`;el.style.color="#f85149";}
+}
+function updateDietPreview(){
+  const bad=parseInt(document.getElementById("f-bad-diet").value)||5;
+  const good=parseInt(document.getElementById("f-good-diet").value)||5;
+  const score=Math.round((good*10 - bad*5 + 50));
+  const clamped=Math.max(0,Math.min(100,score));
+  const badLbls=["없음","거의없음","아주적음","적음","약간적음","보통","약간많음","많음","꽤많음","매우많음","매일먹음"];
+  const goodLbls=["없음","가끔","아주드물게","드물게","약간","보통","자주","꽤자주","많이","거의매일","매일"];
+  document.getElementById("bad-diet-lbl").textContent=bad+" — "+badLbls[bad];
+  document.getElementById("good-diet-lbl").textContent=good+" — "+goodLbls[good];
+  const el=document.getElementById("diet-preview");
+  el.textContent=clamped+" / 100";
+  el.style.color=clamped>=60?"#3fb950":clamped>=40?"#d29922":"#f85149";
+}
+function getISOWeek(d){
+  const dt=new Date(d);
+  const day=dt.getDay()||7;
+  dt.setDate(dt.getDate()+4-day);
+  const y=new Date(dt.getFullYear(),0,1);
+  return dt.getFullYear()+"-W"+String(Math.ceil((((dt-y)/86400000)+1)/7)).padStart(2,"0");
+}
+function thisWeek(){return getISOWeek(new Date());}
+function checkAlreadyLogged(){
+  const tw=thisWeek();
+  const found=logs.find(l=>l.week===tw);
+  document.getElementById("already-logged-banner").style.display=found?"block":"none";
+}
+function saveLog(){
+  const wt=parseFloat(document.getElementById("f-weight").value)||0;
+  const exDays=parseFloat(document.getElementById("f-exdays").value)||0;
+  const exMins=parseFloat(document.getElementById("f-exmins").value)||0;
+  const exMet=parseFloat(document.getElementById("f-exint").value)||5;
+  const exScore=Math.min(100,Math.round(exDays*exMins*exMet/472.5*100));
+  const alc=parseFloat(document.getElementById("f-alcohol").value)||0;
+  const bad=parseInt(document.getElementById("f-bad-diet").value)||5;
+  const good=parseInt(document.getElementById("f-good-diet").value)||5;
+  const dietScore=Math.max(0,Math.min(100,Math.round(good*10-bad*5+50)));
+  const waist=parseFloat(document.getElementById("f-waist").value)||0;
+  const caff=parseFloat(document.getElementById("f-caffeine").value)||0;
+  const cond=parseInt(document.getElementById("f-condition").value)||6;
+  const memo=document.getElementById("f-memo").value.trim();
+  const tw=thisWeek();
+  // estimate risk adjustments from lifestyle vs baseline
+  const risks={};
+  for(const k of["cardio","stroke","diabetes"]){
+    const base=baseline[k]||0.4;
+    const exAdj=-exScore/100*0.08;
+    const alcAdj=alc/14*0.05;
+    const stressAdj=(stressVal-3)/2*0.04;
+    const dietAdj=-(dietScore-50)/100*0.06;
+    const smAdj=smokingState?0.05:0;
+    risks[k]=Math.max(0.02,Math.min(0.98,base+exAdj+alcAdj+stressAdj+dietAdj+smAdj));
+  }
+  const entry={week:tw,date:new Date().toISOString().slice(0,10),weight:wt||null,waist:waist||null,exDays,exMins,exMet,exScore,alcUnits:alc,dietScore,bad,good,caffeine:caff,smoking:smokingState,stress:stressVal,condition:cond,memo,risks};
+  const idx=logs.findIndex(l=>l.week===tw);
+  if(idx>=0)logs[idx]=entry;else logs.push(entry);
+  logs.sort((a,b)=>b.week.localeCompare(a.week));
+  localStorage.setItem("snubh_logs",JSON.stringify(logs));
+  showMain();
+  showToast("✅ 이번 주 기록이 저장되었습니다!");
+}
+function renderLogTable(){
+  const tb=document.getElementById("log-tbody");
+  tb.innerHTML="";
+  const tip=document.getElementById("no-logs-tip");
+  if(!logs.length){tip.style.display="block";return;}
+  tip.style.display="none";
+  const sorted=[...logs].sort((a,b)=>b.week.localeCompare(a.week));
+  for(const l of sorted){
+    const prev=sorted[sorted.indexOf(l)+1];
+    const wDelta=prev&&prev.weight&&l.weight?l.weight-prev.weight:null;
+    const dStr=wDelta!=null?(wDelta>0?`<span class="delta-neg">+${wDelta.toFixed(1)}</span>`:`<span class="delta-pos">${wDelta.toFixed(1)}</span>`):"";
+    const smBadge=l.smoking?`<span class="badge badge-red">흡연</span>`:`<span class="badge badge-green">금연</span>`;
+    const advices=[];
+    if(l.exScore<30)advices.push("운동부족");
+    if(l.alcUnits>14)advices.push("음주↑");
+    if(l.stress>=4)advices.push("스트레스↑");
+    if((l.dietScore||50)<40)advices.push("식단개선");
+    const advStr=advices.length?`<span class="badge badge-yellow">${advices.join(", ")}</span>`:`<span class="badge badge-green">양호</span>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${l.date}</td><td>${l.weight||"—"}${dStr}</td><td>${l.exScore}</td><td>${l.alcUnits}</td><td>${l.dietScore}</td><td>${l.stress}/5</td><td>${smBadge}</td><td>${advStr}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+function renderInsights(){
+  const panel=document.getElementById("insight-panel");
+  if(logs.length<2){panel.innerHTML='<p style="color:var(--muted);font-size:13px">기록이 2주 이상 쌓이면 개인화된 인사이트를 표시합니다.</p>';return;}
+  const sorted=[...logs].sort((a,b)=>b.week.localeCompare(a.week));
+  const recent=sorted[0];const prev=sorted[1];
+  const insights=[];
+  if(recent.weight&&prev.weight){
+    const d=recent.weight-prev.weight;
+    if(d<-0.5)insights.push({icon:"⚖️",color:"#3fb950",text:`체중이 ${Math.abs(d).toFixed(1)}kg 감소했습니다. 꾸준한 관리가 결실을 맺고 있어요!`});
+    else if(d>1)insights.push({icon:"⚖️",color:"#f85149",text:`체중이 ${d.toFixed(1)}kg 증가했습니다. 식단과 운동을 점검해보세요.`});
+  }
+  if(recent.exScore<30)insights.push({icon:"🏃",color:"#ffa657",text:"이번 주 운동량이 부족합니다. WHO 기준 주 150분(중강도) 이상을 목표로 해보세요."});
+  else if(recent.exScore>=70)insights.push({icon:"🏃",color:"#3fb950",text:`운동지수 ${recent.exScore}점! 훌륭한 운동 습관을 유지하고 있습니다.`});
+  if(recent.stress>=4&&prev.stress>=4)insights.push({icon:"🧠",color:"#f85149",text:"2주 연속 높은 스트레스가 감지됩니다. 스트레스는 심혈관·당뇨 위험을 높입니다. 충분한 수면과 이완을 권장합니다."});
+  if(recent.alcUnits>14)insights.push({icon:"🍷",color:"#ffa657",text:`이번 주 음주량(${recent.alcUnits}잔)이 위험 수준입니다. 주 7잔 이하를 권장합니다.`});
+  if(recent.dietScore>=70)insights.push({icon:"🥗",color:"#3fb950",text:"식단점수가 70점 이상입니다. 좋은 식습관이 질환 예방에 가장 강력한 도구입니다!"});
+  for(const k of["cardio","stroke","diabetes"]){
+    const cur=recent.risks?.[k];const prv=prev.risks?.[k]||baseline[k];
+    if(cur&&prv){const d=cur-prv;if(d<-0.03)insights.push({icon:"🎯",color:"#3fb950",text:`${k==="cardio"?"심혈관":k==="stroke"?"뇌졸중":"당뇨"} 위험도가 지난주 대비 ${Math.round(Math.abs(d)*100)}% 감소했습니다. 계속 유지하세요!`});}
+  }
+  if(!insights.length)insights.push({icon:"✅",color:"#3fb950",text:"전반적으로 건강 지표가 안정적입니다. 꾸준히 유지해주세요!"});
+  panel.innerHTML=insights.map(i=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px;flex-shrink:0">${i.icon}</span><p style="font-size:13px;line-height:1.6;color:var(--text)">${i.text}</p></div>`).join("");
+}
+
+function exportCSV(){
+  if(!logs.length){alert("저장된 기록이 없습니다");return;}
+  const hdr=["날짜","체중","운동지수","음주잔수","식단점수","스트레스","흡연","심혈관위험","뇌졸중위험","당뇨위험","메모"];
+  const rows=logs.map(l=>[l.date,l.weight||"",l.exScore,l.alcUnits,l.dietScore,l.stress,l.smoking?"예":"아니오",l.risks?.cardio?Math.round(l.risks.cardio*100)+"%":"",l.risks?.stroke?Math.round(l.risks.stroke*100)+"%":"",l.risks?.diabetes?Math.round(l.risks.diabetes*100)+"%":"",l.memo||""]);
+  const csv=[hdr,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'\\"')}"`).join(",")).join("\n");
+  const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,﻿"+encodeURIComponent(csv);
+  a.download="snubh_health_log.csv";a.click();
+}
+
+function clearForm(){
+  ["f-weight","f-waist","f-exdays","f-exmins","f-alcohol","f-caffeine","f-memo"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  document.getElementById("ex-preview").textContent="—";
+  document.getElementById("diet-preview").textContent="—";
+  setSmoking(false);setStress(3);
+  document.getElementById("f-bad-diet").value=5;
+  document.getElementById("f-good-diet").value=5;
+  updateDietPreview();
+}
+
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),3000);
+}
+
+function resetProfile(){
+  if(!confirm("모든 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다."))return;
+  ["snubh_profile","snubh_logs","snubh_baseline"].forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+
+window.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>

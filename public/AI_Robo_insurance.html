@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 로보틱스 실비보험 시스템 — SNUBH 미래보험 연구</title>
+<style>
+:root{
+  --bg:#070c14;--surface:#0d1520;--surface2:#111d2e;--border:#1e3a5f;
+  --text:#e6edf3;--muted:#7a9bbf;--accent:#00d4ff;--accent2:#7c3aed;
+  --green:#10b981;--yellow:#f59e0b;--red:#ef4444;--orange:#f97316;
+  --teal:#06b6d4;--purple:#8b5cf6;--pink:#ec4899;--blue:#3b82f6;
+  --gold:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:80px 0}
+.section-sm{padding:48px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+.flex{display:flex} .flex-center{display:flex;align-items:center;justify-content:center}
+.gap8{gap:8px} .gap16{gap:16px} .gap24{gap:24px}
+.text-center{text-align:center}
+.text-muted{color:var(--muted)}
+.fw700{font-weight:700} .fw800{font-weight:800}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.badge-cyan{background:#00d4ff18;color:var(--accent);border:1px solid #00d4ff40}
+.badge-purple{background:#7c3aed18;color:var(--purple);border:1px solid #7c3aed40}
+.badge-green{background:#10b98118;color:var(--green);border:1px solid #10b98140}
+.badge-gold{background:#fbbf2418;color:var(--gold);border:1px solid #fbbf2440}
+.badge-red{background:#ef444418;color:var(--red);border:1px solid #ef444440}
+.badge-orange{background:#f9731618;color:var(--orange);border:1px solid #f9731640}
+.nav{position:sticky;top:0;z-index:100;background:rgba(7,12,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;height:56px;gap:0;overflow-x:auto}
+.nav-brand{font-size:15px;font-weight:800;white-space:nowrap;margin-right:32px;background:linear-gradient(90deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links-inner{display:flex;gap:0;flex:1}
+.nav-link{color:var(--muted);text-decoration:none;font-size:13px;padding:0 16px;height:56px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s}
+.nav-link:hover,.nav-link.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-right{margin-left:auto;display:flex;gap:8px;padding-right:4px;white-space:nowrap}
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,#00d4ff,#0070a8);color:#000}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:.3s}
+.card:hover{border-color:#2d5a8a;transform:translateY(-2px)}
+.card-sm{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+.card-glow{box-shadow:0 0 30px rgba(0,212,255,.08)}
+.card-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 20%,#00d4ff10 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,#7c3aed0a 0%,transparent 50%),var(--bg)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.3}
+.hero-content{position:relative;z-index:1;text-align:center;padding:80px 24px}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+.hero-title{font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.1;margin-bottom:24px}
+.hero-title .hl{background:linear-gradient(135deg,#00d4ff 0%,#7c3aed 50%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:18px;color:var(--muted);max-width:640px;margin:0 auto 40px;line-height:1.8}
+.hero-stats{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:60px}
+.hero-stat .num{font-size:36px;font-weight:900;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:13px;color:var(--muted);margin-top:4px}
+.sec-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.sec-title{font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.2;margin-bottom:16px}
+.sec-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:640px;margin-bottom:48px}
+.gap-table{width:100%;border-collapse:collapse;font-size:14px}
+.gap-table th{background:var(--surface2);color:var(--muted);font-weight:600;padding:12px 16px;text-align:left;border-bottom:2px solid var(--border)}
+.gap-table td{padding:12px 16px;border-bottom:1px solid var(--border)30}
+.gap-table tr:hover td{background:var(--surface2)60}
+.check-yes{color:var(--green);font-size:18px} .check-no{color:var(--red);font-size:18px} .check-partial{color:var(--yellow);font-size:18px}
+.robo-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+.robo-tab{flex:1;padding:10px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:.2s;border-right:1px solid var(--border)}
+.robo-tab:last-child{border-right:none}
+.robo-tab.active{background:var(--accent);color:#000}
+.robo-tab .tab-icon{display:block;font-size:20px;margin-bottom:2px}
+.robo-panel{display:none} .robo-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.robo-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
+.robo-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+.robo-card.tier-s::before{background:linear-gradient(90deg,#fbbf24,#f97316)}
+.robo-card.tier-a::before{background:linear-gradient(90deg,#7c3aed,#ec4899)}
+.robo-card.tier-b::before{background:linear-gradient(90deg,#00d4ff,#0070a8)}
+.robo-card.tier-c::before{background:var(--green)}
+.robo-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.robo-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.robo-cost{font-size:20px;font-weight:800}
+.robo-cost-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.robo-tier{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.tier-s-badge{background:#fbbf2418;color:var(--gold);border:1px solid #fbbf2440}
+.tier-a-badge{background:#7c3aed18;color:var(--purple);border:1px solid #7c3aed40}
+.tier-b-badge{background:#00d4ff18;color:var(--accent);border:1px solid #00d4ff40}
+.tier-c-badge{background:#10b98118;color:var(--green);border:1px solid #10b98140}
+.tier-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px}
+@media(max-width:700px){.tier-cards{grid-template-columns:1fr}}
+.tier-card{border-radius:20px;padding:32px 28px;cursor:pointer;transition:.3s;border:2px solid transparent;position:relative}
+.tier-card.selected{transform:translateY(-4px)}
+.tier-basic{background:linear-gradient(135deg,#0d1d2e,#111d2e);border-color:var(--border)}
+.tier-basic.selected{border-color:var(--teal)}
+.tier-std{background:linear-gradient(135deg,#1a0d35,#150d2e);border-color:var(--border)}
+.tier-std.selected{border-color:var(--purple)}
+.tier-prem{background:linear-gradient(135deg,#1a120d,#201510);border-color:var(--border)}
+.tier-prem.selected{border-color:var(--gold)}
+.tier-rec{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.tier-name{font-size:22px;font-weight:800;margin-bottom:4px}
+.tier-price{font-size:36px;font-weight:900;margin:16px 0 4px}
+.tier-price-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+.tier-items{list-style:none}
+.tier-items li{padding:7px 0;font-size:13px;border-bottom:1px solid var(--border)40;display:flex;align-items:flex-start;gap:8px}
+.tier-items li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.tier-items li.no::before{content:"✗";color:var(--muted)}
+.tier-items li.no{color:var(--muted)}
+.calc-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;max-width:800px;margin:0 auto}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+@media(max-width:600px){.calc-row{grid-template-columns:1fr}}
+.calc-label{font-size:13px;color:var(--muted);margin-bottom:6px}
+.calc-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px}
+.calc-input:focus{outline:none;border-color:var(--accent)}
+.calc-result{background:linear-gradient(135deg,#0a1628,#0d1f3a);border:1px solid #1e3a5f;border-radius:16px;padding:28px;margin-top:28px;text-align:center}
+.calc-premium{font-size:48px;font-weight:900;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.calc-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media(max-width:600px){.calc-detail{grid-template-columns:1fr 1fr}}
+.calc-d-item{background:var(--surface2);border-radius:10px;padding:14px;text-align:center}
+.calc-d-val{font-size:18px;font-weight:800;margin-bottom:4px}
+.calc-d-lbl{font-size:11px;color:var(--muted)}
+.risk-link-banner{background:linear-gradient(135deg,#0d2117,#0a1628);border:1px solid #1e3a5f;border-radius:10px;padding:12px 18px;font-size:12px;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.bm-canvas{display:grid;grid-template-columns:2fr 1fr 2fr;grid-template-rows:auto auto;gap:12px;margin-top:32px}
+@media(max-width:900px){.bm-canvas{grid-template-columns:1fr}}
+.bm-cell{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.bm-cell h4{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.bm-cell ul{list-style:none;font-size:13px;line-height:2}
+.bm-cell ul li::before{content:"• ";color:var(--accent)}
+.market-num{font-size:40px;font-weight:900}
+.roadmap{position:relative;padding-left:40px}
+.roadmap::before{content:"";position:absolute;left:16px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--purple),var(--pink))}
+.roadmap-item{position:relative;margin-bottom:36px}
+.roadmap-dot{position:absolute;left:-31px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);top:4px}
+.roadmap-year{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.08em;margin-bottom:4px}
+.roadmap-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.roadmap-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.roadmap-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.roadmap-item.done .roadmap-dot{background:var(--green)}
+.roadmap-item.active .roadmap-dot{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.roadmap-item.future .roadmap-dot{background:var(--surface2);border-color:var(--border)}
+.sync-banner{background:linear-gradient(135deg,#0a1628,#0d1f3a);border:1px solid #1e3a5f;border-radius:12px;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+.sync-banner .sb-ico{font-size:28px}
+.sync-banner .sb-text strong{font-size:15px;display:block;margin-bottom:2px}
+.sync-banner .sb-text span{font-size:12px;color:var(--muted)}
+.sync-chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.footer{background:var(--surface);border-top:1px solid var(--border);padding:48px 0;margin-top:80px}
+.footer-disclaimer{font-size:11px;color:var(--muted);line-height:1.8;max-width:700px;margin:0 auto;text-align:center;padding-top:24px;border-top:1px solid var(--border)}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.pulse{animation:pulse 3s ease-in-out infinite}
+.float{animation:float 4s ease-in-out infinite}
+</style>
+</head>
+<body>
+<nav class="nav">
+<div class="container">
+<div class="nav-inner">
+<div class="nav-brand">🤖 AI Robo Insurance</div>
+<div class="nav-links-inner">
+<a href="#overview" class="nav-link">개요</a>
+<a href="#market-gap" class="nav-link">시장공백</a>
+<a href="#robotics" class="nav-link">로보틱스 서비스</a>
+<a href="#insurance" class="nav-link">보험 설계</a>
+<a href="#calculator" class="nav-link">보험료 산출</a>
+<a href="#business" class="nav-link">사업성 분석</a>
+<a href="#roadmap" class="nav-link">로드맵</a>
+</div>
+<div class="nav-right">
+<a href="index.html" class="btn btn-ghost" style="font-size:12px">← 예측 시뮬레이터</a>
+</div>
+</div>
+</div>
+</nav>
+<section class="hero" id="overview">
+<div class="hero-bg"></div>
+<div class="hero-grid"></div>
+<div class="container" style="width:100%">
+<div class="hero-content">
+<div class="hero-eyebrow">미래형 실손의료보험 연구 · SNUBH 5대질환 예측 시스템 연계</div>
+<h1 class="hero-title">
+AI 로보틱스<br><span class="hl">실비보험 시스템</span>
+</h1>
+<p class="hero-sub">질환·사고로 손상된 신체기능을 AI 로봇이 보조하는 시대.<br>아직 어떤 손보·상해·실비보험사도 보장하지 않는 <strong style="color:var(--accent)">블루오션</strong>.</p>
+<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<a href="#calculator" class="btn btn-primary" style="padding:14px 28px;font-size:15px">💰 보험료 산출하기</a>
+<a href="#market-gap" class="btn btn-ghost" style="padding:14px 28px;font-size:15px">시장 공백 분석 →</a>
+</div>
+<div class="hero-stats">
+<div class="hero-stat text-center"><div class="num">₩47조</div><div class="lbl">2035 국내 로봇재활 시장 예상</div></div>
+<div class="hero-stat text-center"><div class="num">0개</div><div class="lbl">현재 AI 로보틱스 보장 보험상품</div></div>
+<div class="hero-stat text-center"><div class="num">5대</div><div class="lbl">연계 질환군</div></div>
+<div class="hero-stat text-center"><div class="num">87%</div><div class="lbl">고령층 로보틱스 의존도 상승 예측</div></div>
+</div>
+</div>
+</div>
+</section>
+<section class="section-sm" id="sync-section" style="padding:24px 0">
+<div class="container">
+<div class="sync-banner" id="sync-banner" style="display:none">
+<span class="sb-ico">🔗</span>
+<div class="sb-text">
+<strong>예측 시뮬레이터와 연결됨</strong>
+<span id="sync-detail">Stage 1 예측 데이터를 반영해 맞춤 보험료를 산출합니다.</span>
+</div>
+<div class="sync-chips" id="sync-chips"></div>
+</div>
+</div>
+</section>
+<section class="section" id="market-gap" style="background:var(--surface)">
+<div class="container">
+<div class="sec-eyebrow">시장 공백 분석</div>
+<h2 class="sec-title">왜 지금 아무도 보장하지 않는가?</h2>
+<p class="sec-sub">국내외 주요 손해보험·실손의료보험·상해보험사의 AI 로보틱스 보장 현황</p>
+<div style="overflow-x:auto;margin-bottom:48px">
+<table class="gap-table">
+<thead><tr>
+<th>보험 유형</th>
+<th>일반 수술·입원비</th>
+<th>재활치료비</th>
+<th>AI 진단 보조</th>
+<th>외골격 로봇 치료</th>
+<th>AI 케어로봇</th>
+<th>스마트 의료기기</th>
+<th>로보틱 수술</th>
+</tr></thead>
+<tbody>
+<tr><td>실손의료보험 (현행)</td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-partial">△</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-partial">△</span></td>
+</tr>
+<tr><td>손해보험 상해</td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-partial">△</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+</tr>
+<tr><td>생명보험 CI</td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+</tr>
+<tr><td>국민건강보험</td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-partial">△</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-partial">△</span></td>
+</tr>
+<tr><td>민간 재활보험</td>
+<td><span class="check-partial">△</span></td>
+<td><span class="check-partial">△</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+<td><span class="check-no">✗</span></td>
+</tr>
+<tr style="background:rgba(0,212,255,.05);font-weight:700"><td>AI Robo 보험 (제안)</td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+<td><span class="check-yes">✓</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="grid3">
+<div class="card card-glow">
+<div style="font-size:36px;margin-bottom:12px">😰</div>
+<h3 style="font-size:16px;font-weight:700;margin-bottom:8px">환자의 실질 부담</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.7">재활 로봇 1회 치료비 15~30만원, 외골격 구매 시 5,000만~1억원. 보험 없이 전액 자비 부담.</p>
+</div>
+<div class="card card-glow">
+<div style="font-size:36px;margin-bottom:12px">🏥</div>
+<h3 style="font-size:16px;font-weight:700;margin-bottom:8px">의료기관의 도입 장벽</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.7">고가 로봇 장비 투자 회수 불확실 → 도입 포기 악순환. 보험 적용 시 병원 투자 확대 촉진.</p>
+</div>
+<div class="card card-glow">
+<div style="font-size:36px;margin-bottom:12px">🤖</div>
+<h3 style="font-size:16px;font-weight:700;margin-bottom:8px">로보틱스 시장 급성장</h3>
+<p style="font-size:13px;color:var(--muted);line-height:1.7">2024~2035년 의료 로봇 CAGR 25.7%. 보험 공백은 시장 성장의 최대 저해 요인.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="robotics">
+<div class="container">
+<div class="sec-eyebrow">5대 질환별 로보틱스 서비스</div>
+<h2 class="sec-title">질환별 AI 로보틱스 보장 항목</h2>
+<p class="sec-sub">각 질환에 특화된 AI·로보틱스 서비스와 현재 시장 가격. S등급은 최고가·고보장, C등급은 기본 보조.</p>
+<div class="robo-tabs">
+<div class="robo-tab active" onclick="switchRobo(0)" id="rtab-0"><span class="tab-icon">❤️</span>심혈관</div>
+<div class="robo-tab" onclick="switchRobo(1)" id="rtab-1"><span class="tab-icon">🧠</span>뇌졸중</div>
+<div class="robo-tab" onclick="switchRobo(2)" id="rtab-2"><span class="tab-icon">🩸</span>당뇨</div>
+<div class="robo-tab" onclick="switchRobo(3)" id="rtab-3"><span class="tab-icon">💜</span>파킨슨</div>
+<div class="robo-tab" onclick="switchRobo(4)" id="rtab-4"><span class="tab-icon">🌸</span>알츠하이머</div>
+</div>
+<div class="robo-panel active" id="rpanel-0">
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">LVAD 좌심실 보조 장치</div>
+<div class="robo-desc">말기 심부전 환자 심장 기능 완전 대체. 생존율 2년 이상 증가.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">심혈관 기능 유지</div>
+<div class="robo-cost" style="color:var(--gold)">3,000만~1억원</div>
+<div class="robo-cost-lbl">구매·이식비</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">심장재활 로봇 (ReWalk Cardio)</div>
+<div class="robo-desc">심폐기능 회복 특화 보행·운동 재활 로봇 시스템.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">재활 치료</div>
+<div class="robo-cost" style="color:var(--accent)">15~30만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">원격 AI 심장 모니터링</div>
+<div class="robo-desc">24시간 심전도·혈압 AI 분석 + 이상 감지 즉시 알림.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">모니터링</div>
+<div class="robo-cost" style="color:var(--teal)">20~50만원/월</div>
+<div class="robo-cost-lbl">구독료</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">자동 제세동 조끼 (LifeVest)</div>
+<div class="robo-desc">심실세동 감지 시 자동 전기충격. 급사 예방.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">응급 보호</div>
+<div class="robo-cost" style="color:var(--accent)">80~150만원/월</div>
+<div class="robo-cost-lbl">렌탈비</div>
+</div>
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">스마트 혈관 청소 로봇 (나노봇 R&D)</div>
+<div class="robo-desc">혈전·죽상경화 표적 치료 나노로봇. 임상 개발 중.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">혁신 치료</div>
+<div class="robo-cost" style="color:var(--gold)">미정 (연구단계)</div>
+<div class="robo-cost-lbl">미래 서비스</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">AI 약물 자동 조절 시스템</div>
+<div class="robo-desc">혈압·심박 실시간 분석 → 투약량 자동 최적화.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">약물 관리</div>
+<div class="robo-cost" style="color:var(--teal)">100~300만원</div>
+<div class="robo-cost-lbl">기기 비용</div>
+</div>
+</div>
+<div class="robo-panel" id="rpanel-1">
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">Lokomat 보행 재활 로봇</div>
+<div class="robo-desc">로봇 외골격 + 트레드밀로 마비 환자 보행 재활. 세계 1위.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">보행 재활</div>
+<div class="robo-cost" style="color:var(--gold)">15~30만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">InMotion ARM 상지 재활</div>
+<div class="robo-desc">어깨·팔꿈치 반복 운동 로봇. 상지 마비 기능 회복.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">상지 재활</div>
+<div class="robo-cost" style="color:var(--accent)">10~20만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">Ekso Bionics GT 외골격</div>
+<div class="robo-desc">착용형 하지 외골격. 독립 보행 지원.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">이동 보조</div>
+<div class="robo-cost" style="color:var(--gold)">5,000~8,000만원</div>
+<div class="robo-cost-lbl">구매비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">언어치료 AI 로봇 (Lingraphica)</div>
+<div class="robo-desc">실어증 환자 언어 재활 AI 시스템. 24시간 연습.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">언어 재활</div>
+<div class="robo-cost" style="color:var(--teal)">20~40만원/월</div>
+<div class="robo-cost-lbl">구독료</div>
+</div>
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">뇌-컴퓨터 인터페이스 (BCI)</div>
+<div class="robo-desc">뇌파로 로봇 팔·휠체어 제어. 완전 마비 환자.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">고급 보조</div>
+<div class="robo-cost" style="color:var(--gold)">2,000~5,000만원</div>
+<div class="robo-cost-lbl">장비비</div>
+</div>
+<div class="robo-card tier-c">
+<span class="robo-tier tier-c-badge">C등급</span>
+<div class="robo-name">인지재활 VR 시스템</div>
+<div class="robo-desc">VR 환경서 인지·주의력·기억력 재활 훈련.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">인지 재활</div>
+<div class="robo-cost" style="color:var(--green)">5~15만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+</div>
+<div class="robo-panel" id="rpanel-2">
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">Closed-Loop 인슐린 자동주입 (APS)</div>
+<div class="robo-desc">연속 혈당 모니터 + 인슐린 펌프 AI 자동 제어.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">혈당 관리</div>
+<div class="robo-cost" style="color:var(--gold)">500~1,500만원</div>
+<div class="robo-cost-lbl">시스템비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">족부 보호 AI 스마트 인솔</div>
+<div class="robo-desc">압력 분산 + 온도 감지 + 상처 예방 AI 경보.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">족부 보호</div>
+<div class="robo-cost" style="color:var(--teal)">50~150만원/년</div>
+<div class="robo-cost-lbl">연간비</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">당뇨 상처 치료 로봇 (Provizio)</div>
+<div class="robo-desc">로봇 정밀 창상 치료. 족부 절단 예방.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">창상 치료</div>
+<div class="robo-cost" style="color:var(--accent)">20~50만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">연속 혈당 모니터링 (CGM+AI)</div>
+<div class="robo-desc">피부 이식형 센서 + AI 트렌드 분석·예측.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">모니터링</div>
+<div class="robo-cost" style="color:var(--teal)">30~80만원/3개월</div>
+<div class="robo-cost-lbl">소모품</div>
+</div>
+<div class="robo-card tier-c">
+<span class="robo-tier tier-c-badge">C등급</span>
+<div class="robo-name">스마트 인슐린 펜 (NovoPen 6)</div>
+<div class="robo-desc">AI 기록·분석·알림 내장 스마트 주사 펜.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">투약 관리</div>
+<div class="robo-cost" style="color:var(--green)">10~30만원</div>
+<div class="robo-cost-lbl">기기비</div>
+</div>
+<div class="robo-card tier-c">
+<span class="robo-tier tier-c-badge">C등급</span>
+<div class="robo-name">당뇨 망막 AI 스크리닝</div>
+<div class="robo-desc">안저 촬영 AI 분석으로 망막병증 조기 발견.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">합병증 예방</div>
+<div class="robo-cost" style="color:var(--green)">5~15만원/회</div>
+<div class="robo-cost-lbl">검사비</div>
+</div>
+</div>
+<div class="robo-panel" id="rpanel-3">
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">DBS AI 최적화 시스템</div>
+<div class="robo-desc">뇌심부자극술 + AI 실시간 파라미터 최적화. 떨림·강직 제어.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">증상 제어</div>
+<div class="robo-cost" style="color:var(--gold)">1,000~3,000만원</div>
+<div class="robo-cost-lbl">시스템비</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">Emma Watch (떨림 억제 웨어러블)</div>
+<div class="robo-desc">MS Research 개발. 손 떨림 진동 상쇄 웨어러블.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">일상 보조</div>
+<div class="robo-cost" style="color:var(--accent)">100~300만원</div>
+<div class="robo-cost-lbl">기기비</div>
+</div>
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">Ekso Agilik 보행 보조 외골격</div>
+<div class="robo-desc">파킨슨 보행 동결 해소 특화 하지 외골격.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">보행 지원</div>
+<div class="robo-cost" style="color:var(--gold)">2,500~4,000만원</div>
+<div class="robo-cost-lbl">구매비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">LSVT BIG/LOUD AI 코치</div>
+<div class="robo-desc">음성·동작 재활 AI 코치. 강도 자동 조절.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">재활 코치</div>
+<div class="robo-cost" style="color:var(--teal)">10~30만원/월</div>
+<div class="robo-cost-lbl">구독료</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">음성 보조 AI (AVA)</div>
+<div class="robo-desc">파킨슨 음성 변화 감지·보정. 의사소통 지원.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">의사소통</div>
+<div class="robo-cost" style="color:var(--teal)">10~25만원/월</div>
+<div class="robo-cost-lbl">구독료</div>
+</div>
+<div class="robo-card tier-c">
+<span class="robo-tier tier-c-badge">C등급</span>
+<div class="robo-name">균형 보조 스마트 지팡이</div>
+<div class="robo-desc">낙상 예측 AI + 자동 균형 보정 지팡이.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">낙상 예방</div>
+<div class="robo-cost" style="color:var(--green)">80~200만원</div>
+<div class="robo-cost-lbl">기기비</div>
+</div>
+</div>
+<div class="robo-panel" id="rpanel-4">
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">PARO 치료 로봇</div>
+<div class="robo-desc">인지재활·심리 안정 로봇 물개. 치매 환자 감정 반응 촉진.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">인지·심리</div>
+<div class="robo-cost" style="color:var(--accent)">600~900만원</div>
+<div class="robo-cost-lbl">구매비</div>
+</div>
+<div class="robo-card tier-s">
+<span class="robo-tier tier-s-badge">S등급</span>
+<div class="robo-name">AI 케어 로봇 (Pepper/LOVOT)</div>
+<div class="robo-desc">일상 대화·인지 활동·복약 관리 AI 케어 로봇.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">통합 케어</div>
+<div class="robo-cost" style="color:var(--gold)">100~300만원/월</div>
+<div class="robo-cost-lbl">렌탈비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">인지재활 VR/AR 시스템</div>
+<div class="robo-desc">기억 훈련·일상생활 시뮬레이션 VR 프로그램.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">인지 재활</div>
+<div class="robo-cost" style="color:var(--teal)">5~15만원/회</div>
+<div class="robo-cost-lbl">치료비</div>
+</div>
+<div class="robo-card tier-c">
+<span class="robo-tier tier-c-badge">C등급</span>
+<div class="robo-name">GPS AI 배회 감지 시스템</div>
+<div class="robo-desc">실내외 배회 감지 + AI 이상 행동 경보 시스템.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">안전 관리</div>
+<div class="robo-cost" style="color:var(--green)">30~80만원/년</div>
+<div class="robo-cost-lbl">구독료</div>
+</div>
+<div class="robo-card tier-a">
+<span class="robo-tier tier-a-badge">A등급</span>
+<div class="robo-name">뇌파 기반 인지 모니터링 (EEG AI)</div>
+<div class="robo-desc">웨어러블 EEG + AI로 인지 기능 실시간 추적.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">진행 모니터링</div>
+<div class="robo-cost" style="color:var(--accent)">50~200만원</div>
+<div class="robo-cost-lbl">기기비</div>
+</div>
+<div class="robo-card tier-b">
+<span class="robo-tier tier-b-badge">B등급</span>
+<div class="robo-name">AI 스마트 홈 통합 케어</div>
+<div class="robo-desc">스마트홈 + AI가 복약·식사·수면·이상 행동 관리.</div>
+<div class="badge badge-cyan" style="margin-bottom:8px">가정 케어</div>
+<div class="robo-cost" style="color:var(--teal)">100~300만원/년</div>
+<div class="robo-cost-lbl">연간비</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="insurance" style="background:var(--surface)">
+<div class="container">
+<div class="sec-eyebrow">보험 설계</div>
+<h2 class="sec-title">3단계 보장 구조 설계</h2>
+<p class="sec-sub">질환 중증도와 로보틱스 의존도에 따른 3개 플랜. 각 플랜은 상위 플랜의 보장을 포함합니다.</p>
+<div class="tier-cards" id="tier-cards">
+<div class="tier-card tier-BASIC selected" id="tc-basic" onclick="selectTier('basic')">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+<span style="font-size:24px">🛡️</span>
+<span class="badge badge-gold">선택됨</span>
+</div>
+<div class="tier-name" style="color:var(--teal)">베이직</div>
+<div class="tier-price" style="color:var(--teal)">월 15~25만원</div>
+<div class="tier-price-sub">월 보험료 (40대 기준)</div>
+<ul class="tier-items">
+<li>연간 보장 한도 3,000만원</li>
+<li>AI 진단·모니터링 비용 100% 보장</li>
+<li>재활 로봇 치료비 1회 15만원 한도</li>
+<li>연속 혈당 모니터링 소모품</li>
+<li>스마트 웨어러블 기기비 (50만원/년)</li>
+<li>PARO·언어치료 AI 기본 이용</li>
+<li class="no">외골격 로봇 구매비</li>
+<li class="no">AI 케어로봇 렌탈</li>
+<li class="no">LVAD·DBS 고가 시술</li>
+</ul>
+</div>
+<div class="tier-card tier-STD selected" id="tc-std" onclick="selectTier('std')">
+<div class="tier-rec">BEST</div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+<span style="font-size:24px">⚔️</span>
+<span class="badge badge-gold">추천</span>
+</div>
+<div class="tier-name" style="color:var(--purple)">스탠다드</div>
+<div class="tier-price" style="color:var(--purple)">월 35~55만원</div>
+<div class="tier-price-sub">월 보험료 (40대 기준)</div>
+<ul class="tier-items">
+<li>연간 보장 한도 1억원</li>
+<li>BASIC 전 항목 포함</li>
+<li>외골격 로봇 렌탈비 90% 보장</li>
+<li>AI 케어로봇 렌탈 월 200만원 한도</li>
+<li>BCI·DBS 시술비 80% 보장</li>
+<li>Lokomat·InMotion 치료 횟수 제한 없음</li>
+<li>해외 첨단 재활 치료 (연 1회)</li>
+<li class="no">LVAD 등 이식형 고가 장비</li>
+<li class="no">나노로봇 등 임상 개발 중 기술</li>
+</ul>
+</div>
+<div class="tier-card tier-PREM selected" id="tc-prem" onclick="selectTier('prem')">
+<div class="tier-rec">VIP</div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+<span style="font-size:24px">👑</span>
+
+</div>
+<div class="tier-name" style="color:var(--gold)">프리미엄</div>
+<div class="tier-price" style="color:var(--gold)">월 80~120만원</div>
+<div class="tier-price-sub">월 보험료 (40대 기준)</div>
+<ul class="tier-items">
+<li>연간 보장 한도 5억원</li>
+<li>STD 전 항목 포함</li>
+<li>LVAD·BCI 등 전 항목 실비 90%</li>
+<li>외골격 로봇 구매비 최대 1억 보장</li>
+<li>AI 케어로봇·스마트홈 연간 1,500만원</li>
+<li>전담 케어매니저 AI 서비스</li>
+<li>해외 첨단 치료 횟수 무제한</li>
+<li>미래 신기술 자동 편입 조항</li>
+</ul>
+</div>
+</div>
+<div class="grid3" style="margin-top:32px">
+<div class="card-sm">
+<div style="font-size:28px;margin-bottom:10px">🔬</div>
+<div style="font-size:14px;font-weight:700;margin-bottom:6px">실손 기반 설계</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">치료비·렌탈비 등 실제 지출 비용의 80~100% 보장. 정액 지급이 아닌 실손 구조로 과보장 방지.</div>
+</div>
+<div class="card-sm">
+<div style="font-size:28px;margin-bottom:10px">📊</div>
+<div style="font-size:14px;font-weight:700;margin-bottom:6px">AI 리스크 연계</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">SNUBH 예측 모델의 질환 위험도 점수를 언더라이팅에 직접 반영. 건강할수록 낮은 보험료.</div>
+</div>
+<div class="card-sm">
+<div style="font-size:28px;margin-bottom:10px">🔄</div>
+<div style="font-size:14px;font-weight:700;margin-bottom:6px">자동 기술 편입</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">보험 약관에 '신기술 자동 편입 조항' 적용. 나노로봇 등 임상 승인 시 즉시 보장.</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="calculator">
+<div class="container">
+<div class="sec-eyebrow">보험료 산출</div>
+<h2 class="sec-title">맞춤형 AI 로보틱스 보험료 계산</h2>
+<p class="sec-sub" style="margin-bottom:24px">질환 위험도, 연령, 보장 수준을 기반으로 예상 보험료를 산출합니다.</p>
+<div class="calc-box">
+<div class="risk-link-banner" id="calc-sync-banner" style="display:none">
+<span>🔗</span><span id="calc-sync-text">예측 시뮬레이터의 질환 위험도가 반영됩니다.</span>
+<a href="index.html" style="margin-left:auto;color:var(--accent);font-size:11px;text-decoration:none">재측정 →</a>
+</div>
+<div class="calc-row">
+<div><div class="calc-label">나이</div>
+<input type="range" id="c-age" min="20" max="80" value="50" oninput="calcPremium();document.getElementById('c-age-v').textContent=this.value+'세'" class="calc-input" style="padding:8px 0;cursor:pointer">
+<div style="font-size:20px;font-weight:800;margin-top:8px;color:var(--accent)" id="c-age-v">50세</div>
+</div>
+<div><div class="calc-label">성별</div>
+<select id="c-sex" class="calc-input" onchange="calcPremium()">
+<option value="0">여성</option><option value="1" selected>남성</option>
+</select></div>
+</div>
+<div class="calc-row">
+<div><div class="calc-label">목표 질환 (중복 가능)</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap" id="c-diseases">
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" id="cd-cardio" onclick="toggleDis('cardio')">심혈관</button>
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" id="cd-stroke" onclick="toggleDis('stroke')">뇌졸중</button>
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" id="cd-diabetes" onclick="toggleDis('diabetes')">당뇨</button>
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" id="cd-parkinson" onclick="toggleDis('parkinson')">파킨슨</button>
+<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" id="cd-alzheimer" onclick="toggleDis('alzheimer')">알츠하이머</button>
+</div></div>
+<div><div class="calc-label">보장 플랜</div>
+<select id="c-plan" class="calc-input" onchange="calcPremium()">
+<option value="basic">BASIC (기본 보장)</option>
+<option value="std" selected>STANDARD (권장)</option>
+<option value="prem">PREMIUM (최고 보장)</option>
+</select></div>
+</div>
+<div class="calc-row">
+<div><div class="calc-label">현재 건강 상태</div>
+<select id="c-health" class="calc-input" onchange="calcPremium()">
+<option value="0">매우 좋음</option><option value="1">좋음</option>
+<option value="2" selected>보통</option><option value="3">나쁨</option><option value="4">매우 나쁨</option>
+</select></div>
+<div><div class="calc-label">흡연 여부</div>
+<select id="c-smk" class="calc-input" onchange="calcPremium()">
+<option value="0" selected>비흡연</option><option value="1">흡연</option>
+</select></div>
+</div>
+<div style="text-align:center;margin-top:8px">
+<button class="btn btn-primary" style="padding:14px 40px;font-size:15px" onclick="calcPremium()">💰 보험료 산출</button>
+</div>
+<div class="calc-result" id="calc-result">
+<div style="font-size:13px;color:var(--muted);margin-bottom:8px">예상 월 보험료</div>
+<div class="calc-premium" id="calc-premium">— 원</div>
+<div style="font-size:12px;color:var(--muted);margin-top:8px" id="calc-range">조건을 입력하고 산출 버튼을 눌러주세요</div>
+<div class="calc-detail" id="calc-detail"></div>
+<div style="font-size:11px;color:var(--muted);margin-top:16px">* 예시 산출액이며 실제 보험료는 인수 심사 후 결정됩니다. 질환 위험도 점수는 SNUBH 5대질환 예측 모델 기반.</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="business" style="background:var(--surface)">
+<div class="container">
+<div class="sec-eyebrow">사업성 분석</div>
+<h2 class="sec-title">시장 규모 & 비즈니스 모델</h2>
+<div class="grid3" style="margin-bottom:48px">
+<div class="card card-glow text-center">
+<div class="market-num" style="color:var(--accent)">₩47조</div>
+<div style="font-size:13px;font-weight:600;margin:8px 0;color:var(--accent)">TAM — 2035 국내 의료 로봇 + AI 케어 전체 시장</div>
+<p style="font-size:12px;color:var(--muted);line-height:1.6">의료 로봇 CAGR 25.7% + 고령화 수요 폭발. 2024년 ₩8.2조 → 2035년 ₩47조 예상.</p>
+</div>
+<div class="card card-glow text-center">
+<div class="market-num" style="color:var(--purple)">₩12조</div>
+<div style="font-size:13px;font-weight:600;margin:8px 0;color:var(--purple)">SAM — AI 로보틱스 보험 대상 질환 환자 보조기기 시장</div>
+<p style="font-size:12px;color:var(--muted);line-height:1.6">5대 질환 유병 인구(심혈관 1.2M, 뇌졸중 720K 등) × 연간 로보틱스 비용.</p>
+</div>
+<div class="card card-glow text-center">
+<div class="market-num" style="color:var(--gold)">₩1.8조</div>
+<div style="font-size:13px;font-weight:600;margin:8px 0;color:var(--gold)">SOM — 3년내 AI 로보틱스 실비보험 점유 가능 목표</div>
+<p style="font-size:12px;color:var(--muted);line-height:1.6">얼리어답터 집중 공략, 의료기관 제휴, 정부 인증 선취 전략.</p>
+</div>
+</div>
+<h3 style="font-size:20px;font-weight:700;margin-bottom:24px">비즈니스 모델 캔버스</h3>
+<div class="bm-canvas">
+<div class="bm-cell">
+<h4>핵심 파트너십</h4>
+<ul>
+<li>의료 로봇 제조사 (Ekso·Lokomat·ReWalk)</li>
+<li>AI 케어 플랫폼 (카카오헬스·삼성 헬스)</li>
+<li>SNUBH·서울대병원 임상 데이터</li>
+<li>금융감독원 신기술 보험 협의체</li>
+<li>정부 R&D 공동 연구기관</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>핵심 활동</h4>
+<ul>
+<li>AI 리스크 언더라이팅</li>
+<li>로보틱스 파트너 관리</li>
+<li>실시간 클레임 처리 AI</li>
+<li>규제 샌드박스 적용</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>가치 제안</h4>
+<ul>
+<li>세계 최초 AI 로보틱스 실비보험</li>
+<li>예측 모델 연계 맞춤 보험료</li>
+<li>신기술 자동 편입 약관</li>
+<li>재활-보험-로봇 원스톱 플랫폼</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>고객 관계</h4>
+<ul>
+<li>AI 개인 케어매니저</li>
+<li>웨어러블 연동 건강 리워드</li>
+<li>예측 → 예방 → 보험 연속 관리</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>고객 세그먼트</h4>
+<ul>
+<li>5대 질환 고위험군 40~70대</li>
+<li>로보틱스 재활 필요 환자</li>
+<li>병원 B2B 단체계약</li>
+<li>기업 임원 프리미엄</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>핵심 자원</h4>
+<ul>
+<li>SNUBH 질환 예측 AI 모델</li>
+<li>의료 로봇 파트너 네트워크</li>
+<li>보험 계리 + AI 리스크 팀</li>
+<li>클라우드 클레임 처리 인프라</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>채널</h4>
+<ul>
+<li>디지털 직판 (앱·웹)</li>
+<li>병원 내 보험 창구</li>
+<li>로봇 제조사 번들 판매</li>
+<li>헬스케어 스타트업 연계</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>비용 구조</h4>
+<ul>
+<li>클레임 지급 (손해율 목표 65~72%)</li>
+<li>AI 모델 운영·고도화</li>
+<li>의료 파트너 네트워크 관리</li>
+<li>마케팅 (얼리어답터 확보)</li>
+</ul>
+</div>
+<div class="bm-cell">
+<h4>수익 구조</h4>
+<ul>
+<li>월납 보험료 (주 수익원)</li>
+<li>웨어러블 데이터 B2B 판매</li>
+<li>병원 클레임 처리 수수료</li>
+<li>예방 서비스 구독료</li>
+</ul>
+</div>
+</div>
+<div class="grid2" style="margin-top:48px">
+<div class="card">
+<div class="card-title">손해율 예측 모델</div>
+<div id="loss-svg-wrap">
+<svg viewBox="0 0 400 200" style="width:100%">
+<rect x="40" y="62" width="44" height="98" rx="4" fill="var(--yellow)" opacity=".8"/>
+<text x="62" y="56" text-anchor="middle" font-size="12" fill="var(--yellow)" font-weight="700">82%</text>
+<text x="62" y="178" text-anchor="middle" font-size="10" fill="#7a9bbf">1년차</text>
+<rect x="112" y="66" width="44" height="94" rx="4" fill="var(--orange)" opacity=".8"/>
+<text x="134" y="60" text-anchor="middle" font-size="12" fill="var(--orange)" font-weight="700">78%</text>
+<text x="134" y="178" text-anchor="middle" font-size="10" fill="#7a9bbf">2년차</text>
+<rect x="184" y="71" width="44" height="89" rx="4" fill="var(--accent)" opacity=".8"/>
+<text x="206" y="65" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">74%</text>
+<text x="206" y="178" text-anchor="middle" font-size="10" fill="#7a9bbf">3년차</text>
+<rect x="256" y="78" width="44" height="82" rx="4" fill="var(--green)" opacity=".8"/>
+<text x="278" y="72" text-anchor="middle" font-size="12" fill="var(--green)" font-weight="700">68%</text>
+<text x="278" y="178" text-anchor="middle" font-size="10" fill="#7a9bbf">5년차</text>
+<rect x="328" y="82" width="44" height="78" rx="4" fill="var(--teal)" opacity=".8"/>
+<text x="350" y="76" text-anchor="middle" font-size="12" fill="var(--teal)" font-weight="700">65%</text>
+<text x="350" y="178" text-anchor="middle" font-size="10" fill="#7a9bbf">7년차</text>
+<line x1="30" y1="84" x2="390" y2="84" stroke="var(--red)" stroke-width="1" stroke-dasharray="4,4"/>
+<text x="395" y="88" font-size="9" fill="var(--red)" text-anchor="end">손해율 한계 70%</text>
+</svg>
+</div>
+<p style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6">초기 도입 리스크 감안 1년차 82% → AI 리스크 정교화 + 예방 효과로 7년차 65% 목표. 손보업계 평균(73%)보다 낮은 손해율 달성 가능.</p>
+</div>
+<div class="card">
+<div class="card-title">수익성 시뮬레이션 (10만 계약 기준)</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+<div class="card-sm text-center">
+<div style="font-size:18px;font-weight:800;color:var(--accent)">₩6,000억</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px">연 보험료 수입</div>
+</div>
+<div class="card-sm text-center">
+<div style="font-size:18px;font-weight:800;color:var(--red)">₩4,200억</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px">예상 클레임 지급</div>
+</div>
+<div class="card-sm text-center">
+<div style="font-size:18px;font-weight:800;color:var(--yellow)">₩900억</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px">사업비</div>
+</div>
+<div class="card-sm text-center">
+<div style="font-size:18px;font-weight:800;color:var(--green)">₩900억</div>
+<div style="font-size:11px;color:var(--muted);margin-top:4px">예상 영업이익</div>
+</div>
+</div>
+<p style="font-size:12px;color:var(--muted);line-height:1.6">10만 계약, 평균 월납 50만원 기준. 손해율 70% 달성 시 영업이익률 15%. AI 리스크 언더라이팅으로 역선택 최소화.</p>
+<div style="margin-top:16px;padding:12px;background:var(--surface2);border-radius:8px;font-size:12px;color:var(--accent)">
+💡 경쟁 우위: 예측 AI가 고위험자를 사전 식별 → 보험료 차등 적용 → 평균 손해율 경쟁사 대비 8~12%p 낮음
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="roadmap">
+<div class="container">
+<div class="sec-eyebrow">실행 로드맵</div>
+<h2 class="sec-title">단계별 사업화 전략</h2>
+<div class="grid2" style="gap:48px">
+<div class="roadmap">
+<div class="roadmap-item done">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2024 Q1~Q4</div>
+<div class="roadmap-title">연구 기반 구축</div>
+<div class="roadmap-desc">SNUBH 5대질환 예측 AI 개발 완료. BRFSS·NHANES·UCI 데이터 기반 7개 ONNX 모델.</div>
+<div class="roadmap-tags">
+<span class="badge badge-green">완료</span>
+<span class="badge badge-green">AI 모델</span>
+<span class="badge badge-green">데이터 수집</span>
+</div>
+</div>
+<div class="roadmap-item done">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2025 Q1~Q2</div>
+<div class="roadmap-title">웹 플랫폼 런칭</div>
+<div class="roadmap-desc">3단계 예측 시뮬레이터 + 건강 트래커 배포. Cloudflare 인프라 안정화.</div>
+<div class="roadmap-tags">
+<span class="badge badge-green">완료</span>
+<span class="badge badge-green">웹 서비스</span>
+<span class="badge badge-green">사용자 테스트</span>
+</div>
+</div>
+<div class="roadmap-item active">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2025 Q3~Q4</div>
+<div class="roadmap-title">규제 샌드박스 신청</div>
+<div class="roadmap-desc">금융위원회 혁신금융서비스 신청. '로보틱스 실비보험' 최초 인가 목표. 파트너 병원 5개소 MOU.</div>
+<div class="roadmap-tags">
+<span class="badge badge-gold">진행 중</span>
+<span class="badge badge-gold">규제</span>
+<span class="badge badge-gold">B2B</span>
+</div>
+</div>
+<div class="roadmap-item future">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2026 Q1~Q2</div>
+<div class="roadmap-title">파일럿 상품 출시</div>
+<div class="roadmap-desc">BASIC 플랜 소규모 판매(1,000계약). 실손 지급 데이터 축적 + AI 리스크 모델 보정.</div>
+<div class="roadmap-tags">
+<span class="badge badge-cyan">예정</span>
+<span class="badge badge-cyan">파일럿</span>
+<span class="badge badge-cyan">데이터 축적</span>
+</div>
+</div>
+<div class="roadmap-item future">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2026 Q3~Q4</div>
+<div class="roadmap-title">정식 상품 확대</div>
+<div class="roadmap-desc">STANDARD·PREMIUM 플랜 출시. 로봇 제조사 번들 판매 채널 개설. 10만 계약 목표.</div>
+<div class="roadmap-tags">
+<span class="badge badge-cyan">예정</span>
+<span class="badge badge-cyan">확장</span>
+<span class="badge badge-cyan">파트너십</span>
+</div>
+</div>
+<div class="roadmap-item future">
+<div class="roadmap-dot"></div>
+<div class="roadmap-year">2027~2030</div>
+<div class="roadmap-title">글로벌 진출</div>
+<div class="roadmap-desc">일본·동남아 고령화 시장 공략. 나노로봇 임상 승인 시 자동 편입. 세계 최초 로보틱스 특화 보험사.</div>
+<div class="roadmap-tags">
+<span class="badge badge-cyan">미래</span>
+<span class="badge badge-cyan">글로벌</span>
+<span class="badge badge-cyan">IPO</span>
+</div>
+</div>
+</div>
+<div>
+<h3 style="font-size:20px;font-weight:700;margin-bottom:24px">경쟁 우위 분석</h3>
+<div class="card-sm" style="margin-bottom:12px;display:flex;gap:16px">
+<div style="font-size:28px;flex-shrink:0">🤖</div>
+<div>
+<div style="font-size:14px;font-weight:700;margin-bottom:4px">세계 최초 AI 로보틱스 전문 실비보험</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">현재 전 세계 어떤 보험사도 AI 로보틱스를 전문 보장하는 실손보험 상품이 없습니다.</div>
+</div>
+</div>
+<div class="card-sm" style="margin-bottom:12px;display:flex;gap:16px">
+<div style="font-size:28px;flex-shrink:0">🧬</div>
+<div>
+<div style="font-size:14px;font-weight:700;margin-bottom:4px">예측 AI 언더라이팅</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">SNUBH 질환 예측 모델로 가입 전 리스크를 정밀 측정. 역선택 방지 + 보험료 개인화.</div>
+</div>
+</div>
+<div class="card-sm" style="margin-bottom:12px;display:flex;gap:16px">
+<div style="font-size:28px;flex-shrink:0">🔄</div>
+<div>
+<div style="font-size:14px;font-weight:700;margin-bottom:4px">신기술 자동 편입</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">약관에 '임상 승인 신기술 자동 적용' 조항 삽입. 나노로봇 등 미래 기술 보장 선점.</div>
+</div>
+</div>
+<div class="card-sm" style="margin-bottom:12px;display:flex;gap:16px">
+<div style="font-size:28px;flex-shrink:0">📱</div>
+<div>
+<div style="font-size:14px;font-weight:700;margin-bottom:4px">예측-보험-관리 원스톱</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">질환 예측 → AI 로보틱스 보험 → 주간 건강 트래커. 완전한 헬스케어 생태계.</div>
+</div>
+</div>
+<div class="card-sm" style="margin-bottom:12px;display:flex;gap:16px">
+<div style="font-size:28px;flex-shrink:0">🏥</div>
+<div>
+<div style="font-size:14px;font-weight:700;margin-bottom:4px">병원 네트워크 직접 청구</div>
+<div style="font-size:12px;color:var(--muted);line-height:1.6">로봇 치료비 병원-보험사 직접 청구 시스템. 환자 번거로움 제거.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="container">
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;padding-bottom:24px">
+<div>
+<div style="font-size:20px;font-weight:800;background:linear-gradient(90deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">🤖 AI Robo Insurance System</div>
+<div style="font-size:12px;color:var(--muted);margin-top:4px">SNUBH 5대질환 예측 시스템 연계 미래보험 연구</div>
+</div>
+<div style="display:flex;gap:12px">
+<a href="index.html" class="btn btn-ghost">예측 시뮬레이터</a>
+<a href="tracker.html" class="btn btn-ghost">건강 트래커</a>
+</div>
+</div>
+<div class="footer-disclaimer">
+본 페이지는 AI 로보틱스 실비보험 시스템의 연구·기획 목적으로 작성된 사전 연구 자료입니다. 
+실제 보험 상품이 아니며, 제시된 보험료·보장 내용·시장 수치는 예시입니다. 
+실제 보험 상품 출시를 위해서는 금융감독원 인가 및 계리적 검증이 필요합니다.<br>
+질환 위험도 예측 모델: BRFSS 2022 (CDC) · NHANES 2017-2020 · UCI ML Repository 기반 XGBoost → ONNX 변환 모델.
+</div>
+</div>
+</footer>
+<script>
+function switchRobo(idx){
+  for(let i=0;i<5;i++){
+    document.getElementById("rtab-"+i).classList.toggle("active",i===idx);
+    document.getElementById("rpanel-"+i).classList.toggle("active",i===idx);
+  }
+}
+function selectTier(t){
+  ["basic","std","prem"].forEach(k=>{
+    const el=document.getElementById("tc-"+k);
+    if(el) el.classList.toggle("selected",k===t);
+  });
+  document.getElementById("c-plan").value=t;
+  calcPremium();
+}
+const selectedDis=new Set(["cardio"]);
+function toggleDis(k){
+  if(selectedDis.has(k))selectedDis.delete(k);else selectedDis.add(k);
+  document.querySelectorAll("#c-diseases .btn").forEach(b=>{
+    const bk=b.id.replace("cd-","");
+    b.style.background=selectedDis.has(bk)?"var(--accent)":"";
+    b.style.color=selectedDis.has(bk)?"#000":"";
+    b.style.borderColor=selectedDis.has(bk)?"var(--accent)":"";
+  });
+  calcPremium();
+}
+function calcPremium(){
+  const age=+document.getElementById("c-age").value;
+  const sex=+document.getElementById("c-sex").value;
+  const plan=document.getElementById("c-plan").value;
+  const health=+document.getElementById("c-health").value;
+  const smk=+document.getElementById("c-smk").value;
+  const prof=JSON.parse(localStorage.getItem("snubh_user_profile")||"{}");
+
+  // Base premiums by plan
+  const base={basic:180000,std:400000,prem:900000};
+  let p=base[plan];
+
+  // Age factor (actuarial table approximation)
+  const ageFactor=age<30?0.6:age<40?0.8:age<50?1.0:age<60?1.4:age<70?2.0:2.8;
+  p*=ageFactor;
+
+  // Sex factor
+  p*=sex===1?1.08:1.0;
+
+  // Health factor
+  const hf=[0.85,0.92,1.0,1.20,1.45];
+  p*=hf[health];
+
+  // Smoking
+  if(smk)p*=1.18;
+
+  // Disease risk premium loading (from predictor AI)
+  let riskLoad=1.0;
+  if(prof.risks){
+    for(const k of selectedDis){
+      const r=prof.risks[k]||0;
+      if(r>0.6)riskLoad+=0.20;
+      else if(r>0.4)riskLoad+=0.10;
+      else if(r<0.2)riskLoad-=0.05;
+    }
+  }
+  riskLoad=Math.max(0.7,Math.min(2.5,riskLoad));
+  p*=riskLoad;
+
+  // Disease count surcharge
+  if(selectedDis.size>2)p*=1+(selectedDis.size-2)*0.12;
+
+  p=Math.round(p/1000)*1000;
+
+  // Display
+  document.getElementById("calc-premium").textContent=p.toLocaleString()+"원";
+  const annual=p*12;
+  const lo=Math.round(p*0.88/1000)*1000, hi=Math.round(p*1.12/1000)*1000;
+  document.getElementById("calc-range").textContent=`범위 ${lo.toLocaleString()}~${hi.toLocaleString()}원/월 · 연 ${annual.toLocaleString()}원`;
+
+  const details=[
+    {v:p.toLocaleString()+"원",l:"월 보험료",c:"var(--accent)"},
+    {v:annual.toLocaleString()+"원",l:"연 보험료",c:"var(--purple)"},
+    {v:{"basic":"3,000만","std":"1억","prem":"5억"}[plan],l:"연 보장 한도",c:"var(--gold)"},
+    {v:`${Math.round(riskLoad*100-100)>0?"+":""}${Math.round((riskLoad-1)*100)}%`,l:"리스크 할증률",c:riskLoad>1.1?"var(--red)":riskLoad<0.9?"var(--green)":"var(--muted)"},
+  ];
+  document.getElementById("calc-detail").innerHTML=details.map(d=>
+    `<div class="calc-d-item"><div class="calc-d-val" style="color:${d.c}">${d.v}</div><div class="calc-d-lbl">${d.l}</div></div>`).join("");
+}
+function loadFromPredictor(){
+  const prof=JSON.parse(localStorage.getItem("snubh_user_profile")||"{}");
+  if(!prof.age) return;
+
+  // Show sync banner
+  document.getElementById("sync-banner").style.display="flex";
+  document.getElementById("calc-sync-banner").style.display="flex";
+  document.getElementById("sync-detail").textContent=
+    `${prof.age}세, BMI ${prof.bmi} · 최고위험: ${{cardio:"심혈관",stroke:"뇌졸중",diabetes:"당뇨",parkinson:"파킨슨",alzheimer:"알츠하이머"}[prof.topDisease]||"—"} ${Math.round((prof.risks?.[prof.topDisease]||0)*100)}%`;
+
+  // Set calculator age/sex
+  const slider=document.getElementById("c-age");
+  if(slider){slider.value=prof.age;document.getElementById("c-age-v").textContent=prof.age+"세";}
+  const sex=document.getElementById("c-sex");
+  if(sex)sex.value=prof.sex||0;
+  if(prof.smoking){const s=document.getElementById("c-smk");if(s)s.value="1";}
+  if(prof.bmi&&prof.bmi>30){const h=document.getElementById("c-health");if(h)h.value="3";}
+
+  // Auto-select top 2 risk diseases
+  if(prof.risks){
+    const sorted=Object.entries(prof.risks).sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>e[0]);
+    selectedDis.clear();
+    sorted.forEach(k=>selectedDis.add(k));
+    document.querySelectorAll("#c-diseases .btn").forEach(b=>{
+      const k=b.id.replace("cd-","");
+      b.style.background=selectedDis.has(k)?"var(--accent)":"";
+      b.style.color=selectedDis.has(k)?"#000":"";
+      b.style.borderColor=selectedDis.has(k)?"var(--accent)":"";
+    });
+  }
+
+  // Risk chips in sync banner
+  const chips=document.getElementById("sync-chips");
+  if(chips&&prof.risks){
+    const names={cardio:"심혈관",stroke:"뇌졸중",diabetes:"당뇨",parkinson:"파킨슨",alzheimer:"알츠하이머"};
+    chips.innerHTML=Object.entries(prof.risks).sort((a,b)=>b[1]-a[1]).slice(0,3)
+      .map(([k,v])=>`<span class="badge ${v>0.5?"badge-red":v>0.3?"badge-gold":"badge-green"}">${names[k]} ${Math.round(v*100)}%</span>`).join("");
+  }
+
+  // Robo tab: go to top disease
+  const disIdx={cardio:0,stroke:1,diabetes:2,parkinson:3,alzheimer:4};
+  if(prof.topDisease!==undefined&&disIdx[prof.topDisease]!==undefined)
+    switchRobo(disIdx[prof.topDisease]);
+
+  calcPremium();
+}
+const navLinks=document.querySelectorAll(".nav-link");
+const sections=["overview","market-gap","robotics","insurance","calculator","business","roadmap"];
+window.addEventListener("scroll",()=>{
+  const pos=window.scrollY+120;
+  for(const id of sections){
+    const el=document.getElementById(id);
+    if(el&&el.offsetTop<=pos&&el.offsetTop+el.offsetHeight>pos){
+      navLinks.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));
+    }
+  }
+});
+document.addEventListener("DOMContentLoaded",()=>{
+  loadFromPredictor();
+  calcPremium();
+  // Highlight initial disease button
+  document.querySelectorAll("#c-diseases .btn").forEach(b=>{
+    const k=b.id.replace("cd-","");
+    if(selectedDis.has(k)){b.style.background="var(--accent)";b.style.color="#000";b.style.borderColor="var(--accent)";}
+  });
+});
+</script>
+</body>
+</html>

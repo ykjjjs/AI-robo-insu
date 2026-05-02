@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SNUBH 5대 질환 AI — 예방·치료·재활</title>
+<style>
+:root{
+  --bg:#070b14;--surface:#0d1220;--card:#111827;--card2:#0f1a2e;--border:#1e2d45;
+  --cyan:#00d4ff;--blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --purple:#a78bfa;--teal:#2dd4bf;--rose:#fb7185;
+  --text:#e2e8f0;--muted:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif}
+a{color:var(--cyan);text-decoration:none}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;
+  justify-content:space-between;height:56px;gap:.7rem}
+.nav-brand{font-weight:700;font-size:.95rem;color:var(--cyan);white-space:nowrap}
+.nav-links{display:flex;gap:.5rem}
+.nav-link{color:var(--muted);font-size:.78rem;text-decoration:none;padding:.3rem .7rem;
+  border:1px solid var(--border);border-radius:6px;transition:.2s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{color:var(--cyan);border-color:var(--cyan)}
+
+.hero{padding:2.5rem 1.5rem 1.5rem;text-align:center;max-width:680px;margin:0 auto}
+.hero-badge{display:inline-block;padding:.25rem .8rem;background:rgba(0,212,255,.08);
+  border:1px solid rgba(0,212,255,.25);border-radius:20px;font-size:.7rem;color:var(--cyan);
+  margin-bottom:1rem;letter-spacing:.4px;text-transform:uppercase}
+.hero h1{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;line-height:1.3;margin-bottom:.5rem}
+.hero h1 em{font-style:normal;color:var(--cyan)}
+.hero p{color:var(--muted);font-size:.83rem;line-height:1.75}
+
+.stage-nav{display:flex;justify-content:center;gap:0;margin:1.5rem auto;max-width:580px;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.25rem;padding:0 .25rem .25rem}
+.stage-tab{flex:1;padding:.6rem .4rem;text-align:center;cursor:pointer;border-radius:9px;
+  transition:.2s;user-select:none}
+.stage-tab .tn{display:block;font-size:.6rem;font-weight:700;letter-spacing:.5px;opacity:.5;text-transform:uppercase;margin-top:.25rem}
+.stage-tab .tname{display:block;font-size:.78rem;font-weight:600}
+.stage-tab .tsub{display:block;font-size:.6rem;color:var(--muted)}
+.stage-tab[data-s="1"].active{background:rgba(0,212,255,.12);color:var(--cyan)}
+.stage-tab[data-s="2"].active{background:rgba(167,139,250,.12);color:var(--purple)}
+.stage-tab[data-s="3"].active{background:rgba(45,212,191,.12);color:var(--teal)}
+.stage-tab:not(.active){color:var(--muted)}
+.sdiv{width:1px;background:var(--border);margin:.3rem 0;flex-shrink:0}
+
+.stage-section{display:none;padding:0 1.2rem 5rem;max-width:1060px;margin:0 auto}
+.stage-section.visible{display:block}
+
+/* FORM LAYOUT */
+.s1-layout{display:grid;grid-template-columns:1fr 340px;gap:1.2rem;align-items:start}
+@media(max-width:780px){.s1-layout{grid-template-columns:1fr}}
+
+.input-panels{display:flex;flex-direction:column;gap:.9rem}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.card-head{padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;border-bottom:1px solid var(--border);user-select:none}
+.card-head h3{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  display:flex;align-items:center;gap:.5rem}
+.card-head .icon{font-size:1rem}
+.card[data-s="1"] .card-head h3{color:var(--cyan)}
+.card[data-s="2"] .card-head h3{color:var(--purple)}
+.card[data-s="3"] .card-head h3{color:var(--teal)}
+.card-toggle{font-size:.7rem;color:var(--muted);transition:.2s}
+.card.collapsed .card-body{display:none}
+.card-body{padding:.9rem 1.1rem}
+
+/* SCORE CHIP */
+.score-chip{padding:.2rem .65rem;border-radius:20px;font-size:.72rem;font-weight:700}
+.chip-good{background:rgba(34,197,94,.15);color:var(--green)}
+.chip-warn{background:rgba(245,158,11,.15);color:var(--amber)}
+.chip-bad{background:rgba(239,68,68,.15);color:var(--red)}
+.chip-info{background:rgba(0,212,255,.12);color:var(--cyan)}
+
+/* FORM ELEMENTS */
+.fg{margin-bottom:.75rem}
+.fg label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:.28rem;font-weight:500}
+.fg select,.fg input[type=number]{width:100%;background:#07090f;border:1px solid var(--border);
+  border-radius:7px;color:var(--text);padding:.48rem .75rem;font-size:.83rem;outline:none;transition:.2s}
+.fg select:focus,.fg input:focus{border-color:var(--cyan)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
+
+/* BMI */
+.bmi-row{display:flex;align-items:center;justify-content:space-between;
+  background:#07090f;border:1px solid var(--border);border-radius:7px;padding:.5rem .8rem;margin-top:.4rem}
+.bmi-num{font-size:1.3rem;font-weight:700}
+.bmi-lbl{font-size:.7rem;padding:.18rem .5rem;border-radius:5px;font-weight:600}
+.bmi-u{color:#60a5fa}.bmi-n{color:var(--green)}.bmi-ow{color:var(--amber)}.bmi-ob{color:var(--red)}
+.bmil-u{background:rgba(96,165,250,.15)}.bmil-n{background:rgba(34,197,94,.15)}
+.bmil-ow{background:rgba(245,158,11,.15)}.bmil-ob{background:rgba(239,68,68,.15)}
+
+/* SLIDER */
+.sl-row{display:flex;align-items:center;gap:.6rem}
+.sl-row input[type=range]{flex:1;accent-color:var(--cyan);height:4px}
+.sv{font-size:.8rem;font-weight:700;color:var(--cyan);min-width:2.4rem;text-align:right}
+.sl-ends{display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);margin-top:.1rem}
+
+/* INDEX DISPLAY */
+.index-display{background:var(--card2);border:1px solid var(--border);border-radius:9px;
+  padding:.7rem 1rem;margin-top:.5rem;display:flex;align-items:center;justify-content:space-between}
+.idx-val{font-size:1.6rem;font-weight:700}
+.idx-bar-wrap{flex:1;margin:0 .8rem;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.idx-bar{height:100%;border-radius:3px;transition:width .6s ease}
+.idx-lbl{font-size:.68rem;color:var(--muted);text-align:right;min-width:3rem}
+
+/* PSS questions */
+.pss-q{margin-bottom:.6rem}
+.pss-q .ql{font-size:.72rem;color:var(--text);margin-bottom:.25rem;line-height:1.5}
+.pss-opts{display:flex;gap:.3rem;flex-wrap:wrap}
+.pss-opt{padding:.2rem .45rem;border:1px solid var(--border);border-radius:5px;
+  font-size:.65rem;cursor:pointer;transition:.2s;user-select:none;color:var(--muted)}
+.pss-opt.selected{border-color:var(--cyan);background:rgba(0,212,255,.12);color:var(--cyan)}
+
+/* PREDICT BUTTON */
+.pred-btn{width:100%;padding:.85rem;border:none;border-radius:10px;font-weight:700;
+  font-size:.95rem;cursor:pointer;transition:.2s;margin-top:.8rem;letter-spacing:.2px}
+.pred-btn:hover:not(:disabled){transform:translateY(-1px);opacity:.88}
+.pred-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-s1{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#000}
+.btn-s2{background:linear-gradient(135deg,#6d28d9,var(--purple));color:#fff}
+.btn-s3{background:linear-gradient(135deg,#0d9488,var(--teal));color:#000}
+
+/* RESULTS PANEL */
+.result-panel{background:var(--card);border:1px solid var(--border);border-radius:13px;
+  padding:1.1rem;position:sticky;top:68px}
+.rp-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--cyan);border-bottom:1px solid var(--border);padding-bottom:.6rem;margin-bottom:.8rem}
+.api-badge{font-size:.68rem;padding:.22rem .55rem;border-radius:6px;display:inline-flex;
+  align-items:center;gap:.3rem;margin-bottom:.7rem}
+.api-ok{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.api-err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.api-warn{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* RISK BARS */
+.ri{margin-bottom:.8rem}
+.ri-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+.ri-name{font-size:.78rem;font-weight:500}
+.ri-pct{font-size:.83rem;font-weight:700}
+.ri-track{background:rgba(255,255,255,.06);border-radius:3px;height:6px;overflow:hidden}
+.ri-fill{height:100%;border-radius:3px;width:0%;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.ri-sub{font-size:.62rem;margin-top:.18rem}
+.r-lo .ri-pct,.r-lo .ri-fill{color:var(--green);background:var(--green)}.r-lo .ri-sub{color:var(--green)}
+.r-md .ri-pct,.r-md .ri-fill{color:var(--amber);background:var(--amber)}.r-md .ri-sub{color:var(--amber)}
+.r-hi .ri-pct,.r-hi .ri-fill{color:var(--red);background:var(--red)}.r-hi .ri-sub{color:var(--red)}
+
+.placeholder{color:var(--muted);font-size:.8rem;text-align:center;padding:2rem 0;line-height:2}
+.disclaimer{font-size:.68rem;color:var(--muted);background:rgba(245,158,11,.05);
+  border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:.65rem;margin-top:.9rem;line-height:1.65}
+
+/* HEALTH SUMMARY */
+.health-summary{background:var(--card2);border:1px solid var(--border);border-radius:9px;
+  padding:.75rem;margin-top:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.hs-item{text-align:center}
+.hs-val{font-size:1rem;font-weight:700}
+.hs-lbl{font-size:.6rem;color:var(--muted)}
+
+/* S2/S3 GRID */
+.tx-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.5rem}
+.tx-card{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.8rem;text-align:center}
+.tx-val{font-size:1.4rem;font-weight:700;margin-bottom:.15rem}
+.tx-lbl{font-size:.65rem;color:var(--muted);line-height:1.4}
+.tx-g{color:var(--green)}.tx-m{color:var(--amber)}.tx-b{color:var(--red)}.tx-i{color:var(--purple)}
+
+.recovery-chart{height:150px;margin:.7rem 0 .4rem}
+.recovery-chart svg{width:100%;height:100%;overflow:visible}
+.chart-line{fill:none;stroke:var(--teal);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset 1.8s ease}
+.chart-line.anim{stroke-dashoffset:0}
+.chart-dot{fill:var(--teal)}
+.rcms{display:flex;justify-content:space-around;margin-top:.4rem}
+.ms-v{font-size:.95rem;font-weight:700;color:var(--teal)}
+.ms-l{font-size:.6rem;color:var(--muted)}
+.ms-t{font-size:.58rem;color:var(--muted)}
+.hope-box{background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(45,212,191,.03));
+  border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:.9rem 1rem;margin-top:.8rem}
+.hope-box h4{font-size:.76rem;color:var(--teal);margin-bottom:.4rem;font-weight:600}
+.hope-box p{font-size:.73rem;color:var(--muted);line-height:1.7}
+
+/* LIFESTYLE IMPROVEMENT */
+.li-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.8rem 0}
+.li-card{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.75rem}
+.li-card .lc-head{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+.li-card .lc-icon{font-size:1rem}
+.li-card .lc-title{font-size:.72rem;font-weight:600}
+.li-card .lc-score{font-size:.8rem;font-weight:700}
+.li-track{background:rgba(255,255,255,.06);border-radius:3px;height:5px;overflow:hidden;margin-top:.4rem}
+.li-fill{height:100%;border-radius:3px;transition:width .8s ease;background:var(--teal)}
+
+.sect-hdr{font-size:.78rem;font-weight:600;color:var(--teal);margin:1.2rem 0 .6rem;
+  display:flex;align-items:center;gap:.4rem;border-bottom:1px solid var(--border);padding-bottom:.4rem}
+
+/* MODEL GRID */
+.model-section{max-width:1060px;margin:0 auto 4rem;padding:0 1.2rem}
+.model-section h2{text-align:center;font-size:.9rem;color:var(--muted);margin-bottom:1rem;font-weight:500}
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem}
+.mc-h{display:flex;justify-content:space-between;margin-bottom:.3rem}
+.mc-name{font-size:.73rem;font-weight:600;color:var(--cyan)}
+.mc-auc{font-size:.9rem;font-weight:700}
+.mc-data{font-size:.65rem;color:var(--muted)}
+
+footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
+  color:var(--muted);font-size:.73rem;line-height:1.9}
+footer a{color:var(--cyan)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">SNUBH <span style="color:var(--text);font-weight:400">5대 질환 AI</span></div>
+  <div class="nav-links">
+    <a href="tracker.html" class="nav-link">📊 건강 트래커</a>
+    <a href="AI_Robo_insurance.html" class="nav-link" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">AI · BRFSS · NHANES · UCI · v0.2.0</div>
+  <h1>질환 전주기<br><em>AI 예측 시스템</em></h1>
+  <p>발생 위험 → 치료 예후 → 재활 회복<br>음주·식습관·카페인·운동·스트레스 전 인자 반영</p>
+</section>
+
+<div class="stage-nav">
+  <div class="stage-tab active" data-s="1" onclick="sw(1)">
+    <span class="tn">Stage 1</span>
+    <span class="tname">예방 · 예측</span>
+    <span class="tsub">발생 위험도</span>
+  </div>
+  <div class="sdiv"></div>
+  <div class="stage-tab" data-s="2" onclick="sw(2)">
+    <span class="tn">Stage 2</span>
+    <span class="tname">치료 · 예후</span>
+    <span class="tsub">수술·약물 결과</span>
+  </div>
+  <div class="sdiv"></div>
+  <div class="stage-tab" data-s="3" onclick="sw(3)">
+    <span class="tn">Stage 3</span>
+    <span class="tname">재활 · 회복</span>
+    <span class="tsub">회복 궤적</span>
+  </div>
+</div>
+
+<section class="stage-section visible" id="s1">
+  <div class="s1-layout">
+    <!-- LEFT: INPUT PANELS -->
+    <div class="input-panels">
+
+      <!-- 1. 신체 정보 -->
+      <div class="card" data-s="1">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🧬</span> 신체 정보</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="fg"><label>키 (cm)</label>
+              <input type="number" id="s1-h" min="100" max="220" value="170" oninput="bmi('s1')"></div>
+            <div class="fg"><label>몸무게 (kg)</label>
+              <input type="number" id="s1-w" min="30" max="200" value="70" step="0.1" oninput="bmi('s1')"></div>
+          </div>
+          <div class="bmi-row" id="s1-bmi">
+            <div><div style="font-size:.62rem;color:var(--muted)">BMI 자동계산</div>
+              <span class="bmi-num bmi-n" id="s1-bv">24.2</span></div>
+            <span class="bmi-lbl bmil-n" id="s1-bl">정상</span>
+          </div>
+          <div class="two-col" style="margin-top:.75rem">
+            <div class="fg"><label>나이</label>
+              <input type="number" id="s1-age" min="18" max="90" value="50"></div>
+            <div class="fg"><label>성별</label>
+              <select id="s1-sex"><option value="0">여성</option><option value="1" selected>남성</option></select></div>
+          </div>
+          <div class="fg"><label>주관적 건강상태</label>
+            <select id="s1-gh">
+              <option value="4">매우 좋음</option><option value="3">좋음</option>
+              <option value="2" selected>보통</option><option value="1">나쁨</option><option value="0">매우 나쁨</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 생활 습관 (흡연·음주·수면) -->
+      <div class="card" data-s="1">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🍺</span> 생활 습관</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="fg"><label>흡연 여부</label>
+              <select id="s1-smk"><option value="0" selected>비흡연</option><option value="1">흡연</option></select></div>
+            <div class="fg"><label>규칙적 운동</label>
+              <select id="s1-act"><option value="1" selected>예</option><option value="0">아니오</option></select></div>
+          </div>
+          <div class="fg"><label>음주 빈도</label>
+            <select id="s1-alc-freq" onchange="calcAlcohol()">
+              <option value="0" selected>전혀 마시지 않음</option>
+              <option value="1">월 1-3회</option>
+              <option value="2">주 1-2회</option>
+              <option value="3">주 3-4회</option>
+              <option value="4">매일</option>
+            </select>
+          </div>
+          <div class="fg"><label>1회 음주량</label>
+            <select id="s1-alc-amt" onchange="calcAlcohol()">
+              <option value="0" selected>마시지 않음</option>
+              <option value="1">1-2잔 (소량)</option>
+              <option value="2">3-4잔 (중간)</option>
+              <option value="3">5잔 이상 (과음)</option>
+            </select>
+          </div>
+          <div class="index-display" id="alc-display">
+            <span style="font-size:.68rem;color:var(--muted)">음주 지수</span>
+            <span style="font-size:.68rem;color:var(--muted)">0 = 전혀 안마심</span>
+            <div class="idx-bar-wrap"><div class="idx-bar" id="alc-bar" style="width:0%;background:var(--amber)"></div></div>
+            <span class="score-chip chip-good" id="alc-chip">0/100</span>
+          </div>
+          <div class="fg" style="margin-top:.75rem">
+            <label>수면 시간 <span id="sv-sleep" style="color:var(--cyan);font-weight:700">7</span>시간</label>
+            <div class="sl-row">
+              <span style="font-size:.62rem;color:var(--muted)">4h</span>
+              <input type="range" id="s1-sleep" min="4" max="12" value="7" oninput="document.getElementById('sv-sleep').textContent=this.value">
+              <span style="font-size:.62rem;color:var(--muted)">12h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 식습관 & 카페인 -->
+      <div class="card" data-s="1">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🥗</span> 식습관 & 카페인</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:.72rem;color:var(--red);margin-bottom:.7rem;font-weight:600">⚠ 나쁜 식습관 (절제 권고)</div>
+          <div class="three-col">
+            <div class="fg"><label>인스턴트·가공식품<br>(주당 횟수)</label>
+              <select id="d-inst" onchange="calcDiet()">
+                <option value="0">거의 없음</option><option value="1" selected>1-2회</option>
+                <option value="2">3-4회</option><option value="3">5회+</option>
+              </select></div>
+            <div class="fg"><label>탄산음료<br>(주당 횟수)</label>
+              <select id="d-soda" onchange="calcDiet()">
+                <option value="0">거의 없음</option><option value="1" selected>1-2회</option>
+                <option value="2">3-5회</option><option value="3">매일</option>
+              </select></div>
+            <div class="fg"><label>기름진·튀김 음식<br>(주당 횟수)</label>
+              <select id="d-fat" onchange="calcDiet()">
+                <option value="0">거의 없음</option><option value="1" selected>1-2회</option>
+                <option value="2">3-4회</option><option value="3">5회+</option>
+              </select></div>
+          </div>
+          <div style="font-size:.72rem;color:var(--green);margin:.7rem 0;font-weight:600">✅ 좋은 식습관 (실천 권고)</div>
+          <div class="two-col">
+            <div class="fg"><label>채소·과일 섭취</label>
+              <select id="d-veg" onchange="calcDiet()">
+                <option value="3">매일 충분히</option><option value="2" selected>대부분</option>
+                <option value="1">가끔</option><option value="0">거의 안함</option>
+              </select></div>
+            <div class="fg"><label>균형 잡힌 식단</label>
+              <select id="d-bal" onchange="calcDiet()">
+                <option value="3">항상 실천</option><option value="2" selected>대부분</option>
+                <option value="1">가끔</option><option value="0">거의 안함</option>
+              </select></div>
+          </div>
+          <div class="index-display">
+            <span style="font-size:.68rem;color:var(--muted)">식습관 점수</span>
+            <div class="idx-bar-wrap"><div class="idx-bar" id="diet-bar" style="width:55%;background:var(--green)"></div></div>
+            <span class="score-chip chip-good" id="diet-chip">55/100</span>
+          </div>
+          <div style="font-size:.72rem;color:var(--amber);margin:.9rem 0 .5rem;font-weight:600">☕ 카페인 섭취</div>
+          <div class="fg"><label>하루 카페인 음료 (커피·차·에너지드링크)</label>
+            <select id="s1-caff" onchange="calcCaffeine()">
+              <option value="0">없음</option>
+              <option value="1">1잔/일 (적정)</option>
+              <option value="2" selected>2-3잔/일 (보통)</option>
+              <option value="3">4-5잔/일 (과다)</option>
+              <option value="4">6잔+/일 (매우 과다)</option>
+            </select>
+          </div>
+          <div class="index-display">
+            <span style="font-size:.68rem;color:var(--muted)">카페인 지수</span>
+            <div class="idx-bar-wrap"><div class="idx-bar" id="caff-bar" style="width:40%;background:var(--amber)"></div></div>
+            <span class="score-chip chip-warn" id="caff-chip">적정</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 운동 지수 -->
+      <div class="card" data-s="1">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🏃</span> 운동 지수 (MET 기반)</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="three-col">
+            <div class="fg"><label>주당 운동 일수</label>
+              <select id="ex-days" onchange="calcExercise()">
+                <option value="0">0일</option><option value="1">1일</option><option value="2">2일</option>
+                <option value="3" selected>3일</option><option value="4">4일</option>
+                <option value="5">5일</option><option value="6">6일</option><option value="7">7일</option>
+              </select></div>
+            <div class="fg"><label>1회 운동 시간 (분)</label>
+              <select id="ex-min" onchange="calcExercise()">
+                <option value="10">10분</option><option value="20">20분</option>
+                <option value="30" selected>30분</option><option value="45">45분</option>
+                <option value="60">60분</option><option value="90">90분</option>
+                <option value="120">120분+</option>
+              </select></div>
+            <div class="fg"><label>운동 강도</label>
+              <select id="ex-int" onchange="calcExercise()">
+                <option value="1">가벼움 (걷기)</option>
+                <option value="2" selected>보통 (빠른걷기·자전거)</option>
+                <option value="3">격렬 (달리기·수영)</option>
+              </select></div>
+          </div>
+          <div class="index-display" id="ex-display">
+            <div>
+              <div style="font-size:.62rem;color:var(--muted)">운동 지수</div>
+              <span class="idx-val" id="ex-val" style="color:var(--green)">57</span>
+            </div>
+            <div class="idx-bar-wrap"><div class="idx-bar" id="ex-bar" style="width:57%;background:var(--green)"></div></div>
+            <div>
+              <div class="score-chip chip-good" id="ex-chip">보통</div>
+              <div style="font-size:.6rem;color:var(--muted);margin-top:.2rem" id="ex-met">WHO 기준 충족</div>
+            </div>
+          </div>
+          <div style="font-size:.63rem;color:var(--muted);margin-top:.4rem;line-height:1.6">
+            MET (대사당량) 기반 계산: 가벼움 2.5·보통 4.5·격렬 7.0 MET<br>
+            WHO 권고: 주 150분 보통강도 또는 75분 격렬강도 이상
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 스트레스 지수 (PSS-5) -->
+      <div class="card" data-s="1">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🧠</span> 스트레스 지수 (PSS-5)</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:.7rem;color:var(--muted);margin-bottom:.8rem;line-height:1.6">
+            최근 한 달을 기준으로 각 문항을 선택하세요 (0=전혀없음 ~ 4=매우자주)
+          </div>
+          <div id="pss-questions">
+            <!-- populated by JS -->
+          </div>
+          <div class="index-display" style="margin-top:.6rem">
+            <div>
+              <div style="font-size:.62rem;color:var(--muted)">스트레스 지수</div>
+              <span class="idx-val" id="stress-val" style="color:var(--amber)">40</span>
+            </div>
+            <div class="idx-bar-wrap"><div class="idx-bar" id="stress-bar" style="width:40%;background:var(--amber)"></div></div>
+            <span class="score-chip chip-warn" id="stress-chip">보통</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREDICT BUTTON -->
+      <div style="padding:.2rem">
+        <div class="health-summary" id="health-summary">
+          <div class="hs-item"><div class="hs-val" id="hs-ex" style="color:var(--green)">57</div><div class="hs-lbl">운동 지수</div></div>
+          <div class="hs-item"><div class="hs-val" id="hs-diet" style="color:var(--green)">55</div><div class="hs-lbl">식습관 점수</div></div>
+          <div class="hs-item"><div class="hs-val" id="hs-stress" style="color:var(--amber)">40</div><div class="hs-lbl">스트레스 지수</div></div>
+          <div class="hs-item"><div class="hs-val" id="hs-alc" style="color:var(--green)">0</div><div class="hs-lbl">음주 지수</div></div>
+        </div>
+        <button class="pred-btn btn-s1" id="s1-btn" onclick="calcS1()">
+          AI 위험도 예측하기 →
+        </button>
+        <div style="font-size:.65rem;color:var(--muted);text-align:center;margin-top:.4rem">
+          결과는 우측 패널에 표시됩니다
+        </div>
+      </div>
+    </div><!-- /input-panels -->
+
+    <!-- RIGHT: RESULTS -->
+    <div class="result-panel">
+      <div class="rp-title">예측 결과</div>
+      <div id="s1-api" class="api-badge api-warn"><div class="dot"></div> Worker 연결 확인 중...</div>
+      <div id="s1-result"><div class="placeholder">👈 좌측 정보 입력 후<br>예측 버튼 클릭</div></div>
+      <div class="disclaimer">⚠️ BRFSS·NHANES 기반 연구 데모 — 임상 진단 대체 불가</div>
+      <div style="margin-top:.8rem;text-align:center;display:flex;flex-direction:column;gap:.5rem">
+        <a href="tracker.html" style="font-size:.72rem;color:var(--teal)">📊 결과를 트래커에 저장하기 →</a>
+        <a href="AI_Robo_insurance.html" style="font-size:.72rem;color:#00d4ff;font-weight:600">🤖 AI 로보틱스 실비보험 맞춤 설계 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stage-section" id="s2">
+  <div class="s1-layout">
+    <div class="input-panels">
+      <div class="card" data-s="2">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🏥</span> 진단 및 치료 정보</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="fg"><label>확진 질환</label>
+            <select id="s2-dis">
+              <option value="cardio">심혈관질환 (관상동맥)</option>
+              <option value="stroke">뇌혈관질환 (뇌졸중)</option>
+              <option value="diabetes">당뇨병 + 합병증</option>
+              <option value="parkinson">파킨슨병</option>
+              <option value="alzheimer">알츠하이머</option>
+            </select></div>
+          <div class="two-col">
+            <div class="fg"><label>중증도</label>
+              <select id="s2-sev">
+                <option value="mild">경증</option>
+                <option value="moderate" selected>중등도</option>
+                <option value="severe">중증</option>
+              </select></div>
+            <div class="fg"><label>치료 방법</label>
+              <select id="s2-tx">
+                <option value="med">약물</option>
+                <option value="proc">시술</option>
+                <option value="surg" selected>수술</option>
+                <option value="combo">복합</option>
+              </select></div>
+          </div>
+          <div class="two-col">
+            <div class="fg"><label>나이</label>
+              <input type="number" id="s2-age" value="62" min="18" max="90"></div>
+            <div class="fg"><label>기저질환 수</label>
+              <select id="s2-co">
+                <option value="0">없음</option>
+                <option value="1" selected>1개</option>
+                <option value="2">2개</option>
+                <option value="3">3개+</option>
+              </select></div>
+          </div>
+          <div class="two-col">
+            <div class="fg"><label>키 (cm)</label>
+              <input type="number" id="s2-h" value="170" oninput="bmi('s2')"></div>
+            <div class="fg"><label>몸무게 (kg)</label>
+              <input type="number" id="s2-w" value="75" step="0.1" oninput="bmi('s2')"></div>
+          </div>
+          <div class="bmi-row" id="s2-bmi">
+            <div><div style="font-size:.62rem;color:var(--muted)">BMI</div>
+              <span class="bmi-num bmi-ow" id="s2-bv">26.0</span></div>
+            <span class="bmi-lbl bmil-ow" id="s2-bl">과체중</span>
+          </div>
+          <button class="pred-btn btn-s2" onclick="calcS2()" style="margin-top:1rem">치료 예후 예측 →</button>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel" style="--cyan:var(--purple)">
+      <div class="rp-title" style="color:var(--purple)">예후 예측 결과</div>
+      <div id="s2-result"><div class="placeholder">🏥 치료 정보 입력 후<br>예후를 예측합니다</div></div>
+      <div class="disclaimer">⚠️ 임상 문헌 기반 참고치 — 담당 의사와 상담 필수</div>
+    </div>
+  </div>
+</section>
+
+<section class="stage-section" id="s3">
+  <div class="s1-layout">
+    <div class="input-panels">
+      <!-- 현재 상태 -->
+      <div class="card" data-s="3">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">🌱</span> 현재 상태</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="fg"><label>질환</label>
+              <select id="s3-dis">
+                <option value="cardio">심혈관질환</option>
+                <option value="stroke">뇌혈관질환</option>
+                <option value="diabetes">당뇨 합병증</option>
+                <option value="parkinson">파킨슨병</option>
+                <option value="alzheimer">알츠하이머</option>
+              </select></div>
+            <div class="fg"><label>치료 후 경과</label>
+              <select id="s3-mo">
+                <option value="0">막 완료</option><option value="1" selected>1개월</option>
+                <option value="3">3개월</option><option value="6">6개월</option>
+              </select></div>
+          </div>
+          <div class="fg">
+            <label>현재 기능 상태 <span id="sv-func" style="color:var(--teal);font-weight:700">5</span>/10</label>
+            <div class="sl-row">
+              <span style="font-size:.62rem;color:var(--muted)">완전의존</span>
+              <input type="range" id="s3-func" min="0" max="10" value="5" oninput="document.getElementById('sv-func').textContent=this.value">
+              <span style="font-size:.62rem;color:var(--muted)">완전독립</span>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="fg"><label>나이</label>
+              <input type="number" id="s3-age" value="60" min="18" max="90"></div>
+            <div class="fg"><label>가족 지원</label>
+              <select id="s3-sup">
+                <option value="0">없음</option><option value="1" selected>있음</option>
+              </select></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 재활 & 생활습관 개선 -->
+      <div class="card" data-s="3">
+        <div class="card-head" onclick="toggle(this)">
+          <h3><span class="icon">💪</span> 재활 & 생활습관 개선 실천</h3>
+          <span class="card-toggle">▲</span>
+        </div>
+        <div class="card-body">
+          <div class="fg"><label>재활 치료 집중도</label>
+            <select id="s3-rehab">
+              <option value="low">낮음 (주 1-2회)</option>
+              <option value="med" selected>보통 (주 3-4회)</option>
+              <option value="high">집중 (주 5회+)</option>
+            </select></div>
+
+          <div class="sect-hdr">🏃 운동 실천</div>
+          <div class="two-col">
+            <div class="fg"><label>이번 주 운동 일수</label>
+              <select id="r-exdays" onchange="calcLifestyle()">
+                <option value="0">0일</option><option value="1">1일</option><option value="2">2일</option>
+                <option value="3" selected>3일</option><option value="4">4일</option>
+                <option value="5">5일+</option>
+              </select></div>
+            <div class="fg"><label>1회 운동 시간</label>
+              <select id="r-exmin" onchange="calcLifestyle()">
+                <option value="10">10분</option><option value="20">20분</option>
+                <option value="30" selected>30분</option><option value="45">45분</option>
+                <option value="60">60분+</option>
+              </select></div>
+          </div>
+
+          <div class="sect-hdr">🚭 금연 & 절주</div>
+          <div class="two-col">
+            <div class="fg"><label>금연 유지</label>
+              <select id="r-nosmo" onchange="calcLifestyle()">
+                <option value="1" selected>예 (금연 중)</option>
+                <option value="0">아니오</option>
+              </select></div>
+            <div class="fg"><label>이번 주 음주 횟수</label>
+              <select id="r-noalc" onchange="calcLifestyle()">
+                <option value="0" selected>0회 (완전 절주)</option>
+                <option value="1">1회</option>
+                <option value="2">2회</option>
+                <option value="3">3회+</option>
+              </select></div>
+          </div>
+
+          <div class="sect-hdr">🥗 식습관 개선</div>
+          <div class="fg">
+            <label>나쁜 식습관 절제 <span id="sv-bad" style="color:var(--amber);font-weight:700">5</span>/10
+              <span style="font-size:.62rem;color:var(--muted)">(인스턴트·탄산·카페인과다·기름진 음식 줄이기)</span></label>
+            <div class="sl-row">
+              <span style="font-size:.62rem;color:var(--muted)">전혀안함</span>
+              <input type="range" id="r-bad" min="0" max="10" value="5" oninput="document.getElementById('sv-bad').textContent=this.value;calcLifestyle()">
+              <span style="font-size:.62rem;color:var(--muted)">완전절제</span>
+            </div>
+          </div>
+          <div class="fg">
+            <label>좋은 식습관 실천 <span id="sv-good" style="color:var(--green);font-weight:700">5</span>/10
+              <span style="font-size:.62rem;color:var(--muted)">(균형식단·질병맞춤식·채소·통곡물)</span></label>
+            <div class="sl-row">
+              <span style="font-size:.62rem;color:var(--muted)">전혀안함</span>
+              <input type="range" id="r-good" min="0" max="10" value="5" oninput="document.getElementById('sv-good').textContent=this.value;calcLifestyle()">
+              <span style="font-size:.62rem;color:var(--muted)">완전실천</span>
+            </div>
+          </div>
+
+          <!-- Lifestyle summary -->
+          <div style="margin-top:.7rem">
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:.4rem">생활습관 개선 종합 지수</div>
+            <div class="li-grid" id="li-grid">
+              <div class="li-card"><div class="lc-head"><span class="lc-icon">🏃</span><span class="lc-title">운동</span><span class="lc-score" id="li-ex" style="color:var(--teal)">57%</span></div>
+                <div class="li-track"><div class="li-fill" id="li-ex-bar" style="width:57%"></div></div></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-icon">🚭</span><span class="lc-title">금연</span><span class="lc-score" id="li-sm" style="color:var(--green)">100%</span></div>
+                <div class="li-track"><div class="li-fill" id="li-sm-bar" style="width:100%"></div></div></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-icon">🍺</span><span class="lc-title">절주</span><span class="lc-score" id="li-al" style="color:var(--green)">100%</span></div>
+                <div class="li-track"><div class="li-fill" id="li-al-bar" style="width:100%"></div></div></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-icon">🥗</span><span class="lc-title">식습관</span><span class="lc-score" id="li-di" style="color:var(--amber)">50%</span></div>
+                <div class="li-track"><div class="li-fill" id="li-di-bar" style="width:50%"></div></div></div>
+            </div>
+            <div style="text-align:center;margin-top:.3rem">
+              <span style="font-size:.72rem;color:var(--muted)">종합 생활습관 개선 지수: </span>
+              <span id="lifestyle-total" style="font-size:.9rem;font-weight:700;color:var(--teal)">77%</span>
+            </div>
+          </div>
+          <button class="pred-btn btn-s3" onclick="calcS3()" style="margin-top:.9rem">회복 궤적 예측 →</button>
+        </div>
+      </div>
+    </div><!-- /input-panels -->
+
+    <div class="result-panel" style="--cyan:var(--teal)">
+      <div class="rp-title" style="color:var(--teal)">회복 궤적</div>
+      <div id="s3-result"><div class="placeholder">🌱 재활 정보 입력 후<br>회복 궤적을 예측합니다</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="model-section">
+  <h2>탑재 AI 모델 (Stage 1 · ONNX) — Stage 2·3 는 임상 가이드라인 기반 참고 모델</h2>
+  <div class="model-grid">
+    <div class="mc"><div class="mc-h"><span class="mc-name">심혈관</span><span class="mc-auc" style="color:var(--cyan)">0.84</span></div><div class="mc-data">BRFSS 2020 · 245K+ 샘플</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">뇌혈관</span><span class="mc-auc" style="color:var(--cyan)">0.83</span></div><div class="mc-data">BRFSS 2020 · 246K+</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">당뇨 S1</span><span class="mc-auc" style="color:var(--cyan)">0.81</span></div><div class="mc-data">BRFSS 2020 · 246K+</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">당뇨족부 S2</span><span class="mc-auc" style="color:var(--cyan)">0.83</span></div><div class="mc-data">BRFSS 당뇨 서브셋 · 32K+</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">파킨슨</span><span class="mc-auc" style="color:var(--amber)">0.56⚠</span></div><div class="mc-data">UCI Telemonitoring · n=42</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">알츠하이머</span><span class="mc-auc" style="color:var(--cyan)">0.84</span></div><div class="mc-data">NHANES 2017-18</div></div>
+  </div>
+</div>
+
+<footer>
+  <div>SNUBH 5대 질환 AI 전주기 예측 시스템 v0.2.0</div>
+  <div><a href="https://zenodo.org/records/15364962" target="_blank">BRFSS 2020</a> ·
+    <a href="https://wwwn.cdc.gov/nchs/nhanes/" target="_blank">NHANES 2017-18</a> ·
+    <a href="https://archive.ics.uci.edu/dataset/189" target="_blank">UCI Parkinson</a></div>
+  <div style="color:#2d3748">연구·데모 목적 전용 · 임상 사용 금지</div>
+</footer>
+<script>
+const WORKER_URL = localStorage.getItem("snubh_worker_url") || "";
+
+// ── Stage navigation
+function sw(n){
+  document.querySelectorAll(".stage-tab").forEach(t=>t.classList.toggle("active",+t.dataset.s===n));
+  document.querySelectorAll(".stage-section").forEach(s=>s.classList.toggle("visible",s.id==="s"+n));
+  if(n===2||n===3) syncFromS1(n);
+}
+
+// ── Cross-stage sync: Stage 1 입력값 → Stage 2/3 자동 반영
+function syncFromS1(n){
+  const prof=JSON.parse(localStorage.getItem("snubh_user_profile")||"{}");
+  if(!prof.age) return; // Stage 1 예측 전
+
+  const setVal=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.value=v;};
+  const closestOpt=(id,num)=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    let best=null,bd=Infinity;
+    for(const o of sel.options){const d=Math.abs(parseFloat(o.value)-num);if(d<bd){bd=d;best=o.value;}}
+    if(best!=null)sel.value=best;
+  };
+
+  if(n===2){
+    setVal("s2-age",prof.age);
+    setVal("s2-h",prof.height);
+    setVal("s2-w",prof.weight);
+    bmi("s2");
+    if(prof.topDisease) setVal("s2-dis",prof.topDisease);
+    showSyncNote(2,prof);
+  }
+
+  if(n===3){
+    setVal("s3-age",prof.age);
+    if(prof.topDisease) setVal("s3-dis",prof.topDisease);
+
+    // 흡연 → 금연 여부
+    setVal("r-nosmo", prof.smoking?"0":"1");
+
+    // 운동일수·시간 근사값 설정
+    closestOpt("r-exdays", prof.exDays||0);
+    closestOpt("r-exmin",  prof.exMin||30);
+
+    // 음주 → 절주 select (주 회수 근사)
+    const aw=prof.alcWeekly||0;
+    setVal("r-noalc", aw===0?"0":aw<=1?"1":aw<=2?"2":"3");
+
+    // 식단 슬라이더 연동
+    setVal("r-bad",  prof.dietBadRaw||5);
+    setVal("r-good", prof.dietGoodRaw||5);
+    document.getElementById("sv-bad").textContent = document.getElementById("r-bad").value;
+    document.getElementById("sv-good").textContent = document.getElementById("r-good").value;
+
+    calcLifestyle();
+    showSyncNote(3,prof);
+  }
+}
+
+function showSyncNote(stage,prof){
+  const sid="sync-note-s"+stage;
+  let el=document.getElementById(sid);
+  if(!el){
+    el=document.createElement("div");
+    el.id=sid;
+    el.style.cssText="background:#0d2117;border:1px solid #1f5c35;border-radius:8px;padding:9px 14px;font-size:.72rem;color:#3fb950;margin-bottom:10px;display:flex;align-items:center;gap:8px";
+    const sec=document.getElementById("s"+stage);
+    if(sec){const fp=sec.querySelector(".input-panels");if(fp)fp.prepend(el);}
+  }
+  const dis={"cardio":"심혈관","stroke":"뇌졸중","diabetes":"당뇨","parkinson":"파킨슨","alzheimer":"알츠하이머"};
+  el.innerHTML=`<span style="font-size:1rem">🔗</span> Stage 1 정보 자동 반영됨 — 나이 <strong>${prof.age}세</strong>, BMI <strong>${prof.bmi||"—"}</strong>, 최고위험 <strong>${dis[prof.topDisease]||"—"}</strong> · <a href="#" onclick="document.getElementById('${sid}').style.display='none';return false" style="color:#8b949e;margin-left:4px">닫기</a>`;
+}
+
+// ── Card collapse
+function toggle(head){
+  const card=head.closest(".card");
+  card.classList.toggle("collapsed");
+  head.querySelector(".card-toggle").textContent=card.classList.contains("collapsed")?"▼":"▲";
+}
+
+// ── BMI
+function bmi(p){
+  const h=+document.getElementById(p+"-h").value;
+  const w=+document.getElementById(p+"-w").value;
+  if(!h||!w) return;
+  const v=w/((h/100)**2);
+  const bv=document.getElementById(p+"-bv"), bl=document.getElementById(p+"-bl");
+  bv.textContent=v.toFixed(1);
+  const [nc,lc,lt]=v<18.5?["bmi-u","bmil-u","저체중"]:v<25?["bmi-n","bmil-n","정상"]:v<30?["bmi-ow","bmil-ow","과체중"]:["bmi-ob","bmil-ob","비만"];
+  bv.className="bmi-num "+nc; bl.className="bmi-lbl "+lc; bl.textContent=lt;
+  return v;
+}
+bmi("s1"); bmi("s2");
+
+// ── PSS-5 questions
+const PSS_Q=[
+  ["예상치 못한 일로 당황한 적이 얼마나 있었나요?","정방향"],
+  ["중요한 일을 통제하기 어렵다고 느낀 적은?","정방향"],
+  ["신경이 곤두서거나 스트레스를 받은 적은?","정방향"],
+  ["어려움을 잘 해결할 수 있다고 자신감을 느낀 적은?","역방향"],
+  ["일이 순조롭게 진행된다고 느낀 적은?","역방향"],
+];
+const PSS_OPTS=["전혀없음","거의없음","가끔","자주","매우자주"];
+let pssVals=[2,2,2,2,2];
+(function initPSS(){
+  const c=document.getElementById("pss-questions");
+  PSS_Q.forEach((q,qi)=>{
+    const d=document.createElement("div"); d.className="pss-q";
+    d.innerHTML=`<div class="ql">${qi+1}. ${q[0]}</div>
+      <div class="pss-opts">${PSS_OPTS.map((o,oi)=>`<span class="pss-opt${oi===2?" selected":""}" onclick="setPSS(${qi},${oi})">${o}</span>`).join("")}</div>`;
+    c.appendChild(d);
+  });
+  calcStress();
+})();
+function setPSS(qi,vi){
+  pssVals[qi]=vi;
+  document.querySelectorAll(".pss-q")[qi].querySelectorAll(".pss-opt").forEach((o,i)=>o.classList.toggle("selected",i===vi));
+  calcStress();
+}
+function calcStress(){
+  const raw=pssVals[0]+pssVals[1]+pssVals[2]+(4-pssVals[3])+(4-pssVals[4]);
+  const idx=Math.round(raw/20*100);
+  const el=document.getElementById("stress-val"), bar=document.getElementById("stress-bar"), chip=document.getElementById("stress-chip");
+  el.textContent=idx;
+  el.style.color=idx<35?"var(--green)":idx<60?"var(--amber)":"var(--red)";
+  bar.style.width=idx+"%";
+  bar.style.background=idx<35?"var(--green)":idx<60?"var(--amber)":"var(--red)";
+  chip.textContent=idx<35?"낮음":idx<60?"보통":"높음";
+  chip.className="score-chip "+(idx<35?"chip-good":idx<60?"chip-warn":"chip-bad");
+  document.getElementById("hs-stress").textContent=idx;
+  document.getElementById("hs-stress").style.color=idx<35?"var(--green)":idx<60?"var(--amber)":"var(--red)";
+}
+
+// ── Alcohol
+function calcAlcohol(){
+  const f=+document.getElementById("s1-alc-freq").value;
+  const a=+document.getElementById("s1-alc-amt").value;
+  const idx=Math.min(100,Math.round((f+a)/7*100));
+  document.getElementById("alc-bar").style.width=idx+"%";
+  const chip=document.getElementById("alc-chip");
+  chip.textContent=idx+"/100";
+  chip.className="score-chip "+(idx<25?"chip-good":idx<55?"chip-warn":"chip-bad");
+  document.getElementById("hs-alc").textContent=idx;
+  document.getElementById("hs-alc").style.color=idx<25?"var(--green)":idx<55?"var(--amber)":"var(--red)";
+}
+calcAlcohol();
+
+// ── Diet score
+function calcDiet(){
+  const bad=(+document.getElementById("d-inst").value+
+             +document.getElementById("d-soda").value+
+             +document.getElementById("d-fat").value)/9*50;
+  const good=(+document.getElementById("d-veg").value+
+              +document.getElementById("d-bal").value)/6*50;
+  const score=Math.min(100,Math.max(0,Math.round(100-bad+good-30)));
+  document.getElementById("diet-bar").style.width=score+"%";
+  document.getElementById("diet-bar").style.background=score>65?"var(--green)":score>40?"var(--amber)":"var(--red)";
+  const chip=document.getElementById("diet-chip");
+  chip.textContent=score+"/100";
+  chip.className="score-chip "+(score>65?"chip-good":score>40?"chip-warn":"chip-bad");
+  document.getElementById("hs-diet").textContent=score;
+  document.getElementById("hs-diet").style.color=score>65?"var(--green)":score>40?"var(--amber)":"var(--red)";
+}
+calcDiet();
+
+// ── Caffeine
+const CAFF_INFO={0:[0,"없음","chip-good"],1:[20,"적정(보호)","chip-good"],2:[40,"보통","chip-warn"],3:[70,"과다","chip-bad"],4:[100,"매우과다","chip-bad"]};
+function calcCaffeine(){
+  const v=+document.getElementById("s1-caff").value;
+  const [idx,lbl,cls]=CAFF_INFO[v];
+  document.getElementById("caff-bar").style.width=idx+"%";
+  document.getElementById("caff-bar").style.background=idx<30?"var(--green)":idx<60?"var(--amber)":"var(--red)";
+  const chip=document.getElementById("caff-chip");
+  chip.textContent=lbl; chip.className="score-chip "+cls;
+}
+calcCaffeine();
+
+// ── Exercise index (MET-based)
+function calcExercise(){
+  const days=+document.getElementById("ex-days").value;
+  const mins=+document.getElementById("ex-min").value;
+  const int=+document.getElementById("ex-int").value;
+  const MET={1:2.5,2:4.5,3:7.0}[int];
+  const weekMET=days*mins*MET;
+  const score=Math.min(100,Math.round(weekMET/472.5*100));
+  // 472.5 = 7days × 67.5min × MET4.5 avg max reasonable
+  document.getElementById("ex-val").textContent=score;
+  document.getElementById("ex-bar").style.width=score+"%";
+  document.getElementById("ex-bar").style.background=score>60?"var(--green)":score>30?"var(--amber)":"var(--red)";
+  const chip=document.getElementById("ex-chip");
+  chip.textContent=score>60?"충분":score>30?"보통":"부족";
+  chip.className="score-chip "+(score>60?"chip-good":score>30?"chip-warn":"chip-bad");
+  const who=days*mins*(int===1?1.0:int===2?1.0:0.5);
+  document.getElementById("ex-met").textContent=who>=150?"✅ WHO 권고 충족":who>=75?"⚠️ WHO 권고 미달":"❌ 운동 부족";
+  document.getElementById("hs-ex").textContent=score;
+  document.getElementById("hs-ex").style.color=score>60?"var(--green)":score>30?"var(--amber)":"var(--red)";
+}
+calcExercise();
+
+// ── Lifestyle recovery scoring (Stage 3)
+function calcLifestyle(){
+  const exDays=+document.getElementById("r-exdays").value;
+  const exMin=+document.getElementById("r-exmin").value;
+  const exScore=Math.min(100,Math.round(exDays*exMin/210*100));
+  const smokeScore=+document.getElementById("r-nosmo").value*100;
+  const alcWeek=+document.getElementById("r-noalc").value;
+  const alcScore=Math.round([100,80,50,20][Math.min(alcWeek,3)]);
+  const bad=+document.getElementById("r-bad").value;
+  const good=+document.getElementById("r-good").value;
+  const dietScore=Math.round((bad+good)/20*100);
+  const total=Math.round((exScore+smokeScore+alcScore+dietScore)/4);
+  const upd=(id,bar,val,s)=>{
+    document.getElementById(id).textContent=val+"%";
+    document.getElementById(bar).style.width=val+"%";
+    const c=val>65?"var(--green)":val>40?"var(--amber)":"var(--red)";
+    document.getElementById(id).style.color=c;
+    document.getElementById(bar).style.background=c;
+  };
+  upd("li-ex","li-ex-bar",exScore);
+  upd("li-sm","li-sm-bar",smokeScore);
+  upd("li-al","li-al-bar",alcScore);
+  upd("li-di","li-di-bar",dietScore);
+  document.getElementById("lifestyle-total").textContent=total+"%";
+  document.getElementById("lifestyle-total").style.color=total>65?"var(--teal)":total>40?"var(--amber)":"var(--red)";
+  return {exScore,smokeScore,alcScore,dietScore,total};
+}
+calcLifestyle();
+
+// ── Worker health
+async function checkWorker(){
+  const el=document.getElementById("s1-api");
+  try{
+    const r=await fetch(WORKER_URL+"/api/health",{signal:AbortSignal.timeout(5000)});
+    if(r.ok){el.className="api-badge api-ok";el.innerHTML='<div class="dot"></div> Worker 연결됨';}
+    else throw 0;
+  }catch{el.className="api-badge api-err";el.innerHTML='<div class="dot"></div> 미연결 (sigmoid 추정)';}
+}
+checkWorker();
+
+// ── Helpers
+function ageCategory(age){const b=[24,29,34,39,44,49,54,59,64,69,74,79];const i=b.findIndex(v=>age<=v);return i<0?13:i+1;}
+function sigmoid(x){return 1/(1+Math.exp(-x));}
+function getBMI(p){const h=+document.getElementById(p+"-h").value,w=+document.getElementById(p+"-w").value;return h&&w?w/((h/100)**2):25;}
+
+function renderBars(id,scores){
+  document.getElementById(id).innerHTML=scores.map(({name,p,fallback,note})=>{
+    const pct=Math.min(99,Math.max(1,Math.round(p*100)));
+    const cls=pct<25?"r-lo":pct<55?"r-md":"r-hi";
+    const lbl=pct<25?"낮음":pct<55?"주의":"높음";
+    const fb=fallback?"<span style='font-size:.58rem;opacity:.45'>(추정)</span>":"";
+    const nt=note?`<span style="font-size:.58rem;opacity:.55"> ${note}</span>`:"";
+    return`<div class="ri ${cls}">
+      <div class="ri-head"><span class="ri-name">${name} ${fb}</span><span class="ri-pct">${pct}%</span></div>
+      <div class="ri-track"><div class="ri-fill" data-t="${pct}"></div></div>
+      <div class="ri-sub">${lbl}${nt}</div></div>`;
+  }).join("");
+  requestAnimationFrame(()=>{document.querySelectorAll(".ri-fill[data-t]").forEach(el=>{setTimeout(()=>{el.style.width=el.dataset.t+"%"},60);});});
+}
+
+// ══════════════════════════
+// STAGE 1 PREDICT
+// ══════════════════════════
+async function calcS1(){
+  const age=+document.getElementById("s1-age").value;
+  const bmiVal=getBMI("s1");
+  const sleep=+document.getElementById("s1-sleep").value;
+  const gh=+document.getElementById("s1-gh").value;
+  const smk=+document.getElementById("s1-smk").value;
+  const act=+document.getElementById("s1-act").value;
+  const sex=+document.getElementById("s1-sex").value;
+
+  // Derived indices
+  const alcFreq=+document.getElementById("s1-alc-freq").value;
+  const alcAmt=+document.getElementById("s1-alc-amt").value;
+  const alcDrinking=(alcFreq>=2||alcAmt>=2)?1:0; // BRFSS AlcoholDrinking definition (heavy drinker)
+  const caff=+document.getElementById("s1-caff").value;
+  const stressRaw=pssVals[0]+pssVals[1]+pssVals[2]+(4-pssVals[3])+(4-pssVals[4]);
+  const stressIdx=stressRaw/20;
+  const mentalDays=Math.round(stressIdx*15); // stress → mental health bad days proxy
+  const exDays=+document.getElementById("ex-days").value;
+  const exMin=+document.getElementById("ex-min").value;
+  const exInt=+document.getElementById("ex-int").value;
+  const exIdx=Math.min(100,Math.round(exDays*exMin*({1:2.5,2:4.5,3:7}[exInt])/472.5*100));
+  const physAct=exIdx>=30?1:0; // derive BRFSS PhysicalActivity from exercise index
+  const dietBad=(+document.getElementById("d-inst").value+
+                 +document.getElementById("d-soda").value+
+                 +document.getElementById("d-fat").value)/9;
+  const dietGood=(+document.getElementById("d-veg").value+
+                  +document.getElementById("d-bal").value)/6;
+  const dietScore=Math.max(0,Math.min(1,dietGood-dietBad+0.5));
+
+  const btn=document.getElementById("s1-btn");
+  btn.disabled=true; btn.textContent="⏳ 추론 중...";
+
+  const ac=ageCategory(age);
+  const brfss={BMI:bmiVal,PhysicalHealth:0,MentalHealth:mentalDays,SleepTime:sleep,
+    Smoking:smk,AlcoholDrinking:alcDrinking,DiffWalking:0,Sex:sex,AgeCategory:ac,
+    Diabetic:0,PhysicalActivity:physAct,GenHealth:gh};
+
+  const ageN=(age-50)/15, bmiN=(bmiVal-27)/6, ghN=(2-gh)/2, mentalN=stressIdx;
+  const caffAdj={0:0,1:-0.1,2:0,3:0.1,4:0.2}[caff]; // caffeine risk adjustment
+  const dietAdj=-(dietScore-0.5)*0.3;
+  const alcAdj=(alcFreq*0.08)+(alcAmt*0.1);
+
+  let pCa,pSt,pDi,pAl,fallback=false;
+  try{
+    [pCa,pSt,pDi,pAl]=await Promise.all([
+      callPredict("cardio",    {...brfss,Stroke:0,KidneyDisease:0}),
+      callPredict("stroke",    {...brfss,HeartDisease:0}),
+      callPredict("diabetes_s1",{...brfss,HeartDisease:0,Stroke:0}),
+      callPredict("alzheimer", {RIDAGEYR:age,BMXBMI:bmiVal,phq9_score:Math.round(stressIdx*13),
+        current_smoker:smk,RIAGENDR:sex,BPXSY1:120,BPXDI1:80}),
+    ]);
+    // Post-hoc adjustments for variables not in BRFSS model
+    const adj=(p,a)=>Math.max(0.01,Math.min(0.99,p+a*(1-p)));
+    pCa=adj(pCa, alcAdj+dietAdj);
+    pSt=adj(pSt, alcAdj*0.8+dietAdj*0.7);
+    pDi=adj(pDi, dietAdj*1.2+alcAdj*0.5);
+    pAl=adj(pAl, caffAdj*(-1)+mentalN*0.05);
+  }catch{
+    fallback=true;
+    pCa=sigmoid(-3.2+0.55*ageN+0.30*bmiN+0.70*ghN+0.40*smk-0.25*(physAct?1:0)+0.30*sex+0.20*mentalN+alcAdj+dietAdj);
+    pSt=sigmoid(-4.1+0.50*ageN+0.25*bmiN+0.60*ghN+0.35*smk-0.20*(physAct?1:0)+0.15*sex+alcAdj*0.8);
+    pDi=sigmoid(-2.8+0.45*ageN+0.65*bmiN+0.50*ghN+0.30*smk-0.30*(physAct?1:0)+0.10*sex+dietAdj*1.2);
+    pAl=sigmoid(-4.2+0.60*ageN+0.20*bmiN+0.40*mentalN+0.15*ghN-0.20*(physAct?1:0)+caffAdj*(-1));
+  }
+  const pPark=sigmoid(-5.0+0.40*ageN-0.15*smk-0.10*(physAct?1:0)+0.10*mentalN+caffAdj*(-0.15));
+
+  renderBars("s1-result",[
+    {name:"심혈관질환",p:pCa,fallback},
+    {name:"뇌혈관질환",p:pSt,fallback},
+    {name:"당뇨",p:pDi,fallback},
+    {name:"파킨슨",p:pPark,fallback:true,note:"UCI소표본"},
+    {name:"알츠하이머",p:pAl,fallback},
+  ]);
+
+  // ── Stage 1 예측 완료 → localStorage에 전체 프로필 저장 (Stage 2/3 자동동기화 + 트래커 연동)
+  const risks={cardio:pCa,stroke:pSt,diabetes:pDi,parkinson:pPark,alzheimer:pAl};
+  const topDisease=Object.entries(risks).reduce((a,b)=>b[1]>a[1]?b:a)[0];
+
+  // 기본 scores (트래커 베이스라인용)
+  const lastScores={
+    date:new Date().toISOString().slice(0,10),
+    cardio:pCa,stroke:pSt,diabetes:pDi,parkinson:pPark,alzheimer:pAl,
+    metrics:{bmi:bmiVal,exercise:exIdx,stress:Math.round(stressIdx*100),
+      diet:Math.round(dietScore*100),alcohol:Math.min(100,Math.round((alcFreq+alcAmt)/7*100))}
+  };
+  localStorage.setItem("snubh_last_scores",JSON.stringify(lastScores));
+
+  // 상세 프로필 (Stage 2/3 sync + 트래커 프로필 자동 완성용)
+  const userProfile={
+    age,sex,
+    height:+document.getElementById("s1-h").value,
+    weight:+document.getElementById("s1-w").value,
+    bmi:+bmiVal.toFixed(1),
+    smoking:smk,
+    // 운동 원시값 (Stage 3 동기화)
+    exDays:+document.getElementById("ex-days").value,
+    exMin:+document.getElementById("ex-min").value,
+    exScore:exIdx,
+    // 음주 (주간 횟수 근사)
+    alcFreq,alcAmt,
+    alcWeekly:alcFreq*alcAmt,
+    // 식단 원시값 (Stage 3 슬라이더 동기화)
+    dietBadRaw:Math.round((+document.getElementById("d-inst").value+
+      +document.getElementById("d-soda").value+
+      +document.getElementById("d-fat").value)/9*10),
+    dietGoodRaw:Math.round((+document.getElementById("d-veg").value+
+      +document.getElementById("d-bal").value)/6*10),
+    dietScore:Math.round(dietScore*100),
+    stressScore:Math.round(stressIdx*100),
+    stressLevel:Math.round(stressIdx*4)+1, // 1-5 스케일
+    caffeine:caff,
+    risks,topDisease,
+    date:new Date().toISOString().slice(0,10)
+  };
+  localStorage.setItem("snubh_user_profile",JSON.stringify(userProfile));
+
+  // 이미 열려있는 Stage 2/3 sync note 갱신
+  ["sync-note-s2","sync-note-s3"].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display="none";
+  });
+
+  btn.disabled=false; btn.textContent="AI 위험도 예측하기 →";
+}
+
+async function callPredict(model,features){
+  const r=await fetch(WORKER_URL+"/api/predict",{method:"POST",
+    headers:{"Content-Type":"application/json"},body:JSON.stringify({model,features}),
+    signal:AbortSignal.timeout(8000)});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  return (await r.json()).probability;
+}
+
+// ══════════════════════════
+// STAGE 2 PREDICT
+// ══════════════════════════
+const TX={
+  cardio:{med:{s:[88,82,72],c:[8,12,22],h:[3,5,8],v:[92,88,78]},proc:{s:[91,85,74],c:[7,11,20],h:[4,7,12],v:[94,90,82]},surg:{s:[94,88,76],c:[6,10,18],h:[7,12,18],v:[96,92,84]},combo:{s:[95,90,80],c:[9,14,25],h:[8,14,20],v:[96,93,86]}},
+  stroke:{med:{s:[72,62,50],c:[12,18,30],h:[10,18,28],v:[85,78,65]},proc:{s:[78,68,55],c:[10,16,28],h:[12,20,30],v:[88,82,70]},surg:{s:[75,65,52],c:[11,17,29],h:[14,24,36],v:[86,80,68]},combo:{s:[80,70,58],c:[13,20,32],h:[16,26,40],v:[89,83,72]}},
+  diabetes:{med:{s:[82,75,62],c:[10,16,28],h:[2,4,7],v:[95,91,84]},proc:{s:[84,78,65],c:[9,15,26],h:[4,7,12],v:[95,92,86]},surg:{s:[86,80,68],c:[11,18,30],h:[6,10,16],v:[94,90,83]},combo:{s:[88,82,70],c:[12,20,33],h:[7,12,18],v:[95,92,86]}},
+  parkinson:{med:{s:[75,68,55],c:[6,10,18],h:[1,2,4],v:[96,93,88]},proc:{s:[72,65,52],c:[8,13,22],h:[3,6,10],v:[95,92,86]},surg:{s:[70,62,48],c:[10,16,26],h:[5,9,14],v:[94,91,85]},combo:{s:[78,72,60],c:[9,14,24],h:[4,8,13],v:[96,93,88]}},
+  alzheimer:{med:{s:[55,42,30],c:[5,8,14],h:[1,2,3],v:[92,87,78]},proc:{s:[52,40,28],c:[6,9,15],h:[2,4,7],v:[91,86,76]},surg:{s:[48,36,24],c:[8,12,20],h:[4,7,12],v:[90,85,74]},combo:{s:[58,45,33],c:[7,11,18],h:[2,5,8],v:[92,87,78]}},
+};
+const SI={mild:0,moderate:1,severe:2};
+const DLBL={cardio:"심혈관질환",stroke:"뇌혈관질환",diabetes:"당뇨",parkinson:"파킨슨",alzheimer:"알츠하이머"};
+
+function calcS2(){
+  const dis=document.getElementById("s2-dis").value;
+  const sev=document.getElementById("s2-sev").value;
+  const tx=document.getElementById("s2-tx").value;
+  const age=+document.getElementById("s2-age").value;
+  const co=+document.getElementById("s2-co").value;
+  const bmiV=getBMI("s2");
+  const si=SI[sev], d=TX[dis][tx];
+  const adj=(age>70?-8:age>60?-4:0)+co*-5+(bmiV>30?-3:0);
+  const success=Math.min(98,Math.max(20,d.s[si]+adj));
+  const comp=Math.min(55,Math.max(2,d.c[si]-adj*0.3));
+  const hosp=d.h[si];
+  const surv=Math.min(99,Math.max(40,d.v[si]+adj*0.7));
+  const sc=success>=80?"tx-g":success>=60?"tx-m":"tx-b";
+  const cc=comp<=15?"tx-g":comp<=30?"tx-m":"tx-b";
+  document.getElementById("s2-result").innerHTML=`
+    <div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem;line-height:1.7">
+      <strong style="color:var(--purple)">${DLBL[dis]}</strong> · ${{mild:"경증",moderate:"중등도",severe:"중증"}[sev]} · ${{med:"약물",proc:"시술",surg:"수술",combo:"복합"}[tx]} 치료<br>
+      나이 ${age}세, BMI ${bmiV.toFixed(1)}, 기저질환 ${co}개 반영
+    </div>
+    <div class="tx-grid">
+      <div class="tx-card"><div class="tx-val ${sc}">${Math.round(success)}%</div><div class="tx-lbl">치료 성공률</div></div>
+      <div class="tx-card"><div class="tx-val ${cc}">${Math.round(comp)}%</div><div class="tx-lbl">합병증 위험</div></div>
+      <div class="tx-card"><div class="tx-val tx-i">${hosp}일</div><div class="tx-lbl">예상 입원 기간</div></div>
+      <div class="tx-card"><div class="tx-val tx-g">${Math.round(surv)}%</div><div class="tx-lbl">1년 생존율</div></div>
+    </div>
+    <div style="font-size:.63rem;color:var(--muted);margin-top:.7rem">ACC/AHA·ASA·ADA 임상 가이드라인 기반</div>`;
+}
+
+// ══════════════════════════
+// STAGE 3 REHAB
+// ══════════════════════════
+const RB={
+  cardio:   {base:55,rate:[8,15,22,28,32,34],ceil:88,lbl:"심폐기능 회복 %",hope:"심장재활 프로그램 참여 환자의 85%가 6개월 내 일상 복귀에 성공합니다. 규칙적 유산소 운동과 저염·저지방 식단이 핵심입니다."},
+  stroke:   {base:35,rate:[10,18,26,32,36,38],ceil:80,lbl:"운동·언어 기능 회복 %",hope:"뇌졸중 재활은 시작이 빠를수록 효과적입니다. 집중 재활 시 기능 회복 속도가 2배 빨라집니다. 매일 30분 이상의 재활 운동을 권장합니다."},
+  diabetes: {base:45,rate:[7,13,19,24,28,30],ceil:82,lbl:"기능·상처 회복 %",hope:"균형 잡힌 혈당 관리와 적극적인 발 관리로 족부 기능의 70% 이상 회복이 가능합니다. 저당·고섬유 식단이 회복을 가속합니다."},
+  parkinson:{base:50,rate:[5,10,15,19,22,24],ceil:75,lbl:"운동 기능 유지 %",hope:"규칙적 물리치료와 LSVT BIG 프로그램이 균형·보행을 유의미하게 개선합니다. 규칙적 유산소 운동이 도파민 기능 보호에 도움됩니다."},
+  alzheimer:{base:40,rate:[3,6,9,11,13,14],ceil:60,lbl:"인지 기능 유지 %",hope:"인지 재활·사회 활동·가족 지지가 결합될 때 증상 진행을 30-40% 늦출 수 있습니다. 지중해식 식단과 규칙적 운동이 뇌 건강에 도움됩니다."},
+};
+
+function calcS3(){
+  const dis=document.getElementById("s3-dis").value;
+  const mo=+document.getElementById("s3-mo").value;
+  const func=+document.getElementById("s3-func").value;
+  const age=+document.getElementById("s3-age").value;
+  const sup=+document.getElementById("s3-sup").value;
+  const rehab=document.getElementById("s3-rehab").value;
+  const ls=calcLifestyle();
+
+  const b=RB[dis];
+  const rehabMult={low:0.7,med:1.0,high:1.35}[rehab];
+  const ageAdj=age>70?0.75:age>60?0.88:1.0;
+  const suppAdj=sup?1.1:0.9;
+  const lifeMult=0.6+(ls.total/100)*0.8;
+
+  const mPts=[1,3,6,9,12];
+  const traj=mPts.map((m,i)=>{
+    const raw=func*10+b.rate[Math.min(i,5)]*rehabMult*ageAdj*suppAdj*lifeMult;
+    return Math.min(b.ceil,Math.max(func*10+3,raw));
+  });
+
+  const retMonth=traj.findIndex(v=>v>=70);
+  const retTxt=retMonth>=0?`약 ${mPts[retMonth]}개월`:"12개월+";
+  const W=280,H=130,PL=32,PR=12,PT=8,PB=26;
+  const cW=W-PL-PR, cH=H-PT-PB;
+  const allPts=[func*10,...traj], allM=[0,...mPts], maxV=100;
+  const xs=allM.map(m=>PL+m/12*cW);
+  const ys=allPts.map(v=>H-PB-v/maxV*cH);
+  const pd="M"+xs.map((x,i)=>`${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" L");
+  const ad=pd+` L${xs[xs.length-1].toFixed(1)},${(H-PB).toFixed(1)} L${xs[0].toFixed(1)},${(H-PB).toFixed(1)} Z`;
+  const grids=[25,50,75].map(v=>{
+    const y=H-PB-v/maxV*cH;
+    return `<line stroke="rgba(255,255,255,.04)" x1="${PL}" y1="${y.toFixed(1)}" x2="${W-PR}" y2="${y.toFixed(1)}"/><text x="${PL-3}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="8" fill="var(--muted)">${v}</text>`;
+  }).join("");
+  const xaxis=[0,3,6,9,12].map(m=>`<text x="${(PL+m/12*cW).toFixed(1)}" y="${H-PB+10}" text-anchor="middle" font-size="8" fill="var(--muted)">${m}m</text>`).join("");
+  const dots=xs.map((x,i)=>`<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="${i===0?2.5:3.5}" fill="${i===0?"rgba(255,255,255,.3)":"var(--teal)"}" />`).join("");
+  const chart=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%;overflow:visible">
+    ${grids}<line stroke="var(--border)" x1="${PL}" y1="${H-PB}" x2="${W-PR}" y2="${H-PB}"/>
+    <line stroke="var(--border)" x1="${PL}" y1="${PT}" x2="${PL}" y2="${H-PB}"/>
+    ${xaxis}<text x="${PL}" y="${PT-1}" font-size="7" fill="var(--muted)">${b.lbl}</text>
+    <path d="${ad}" fill="var(--teal)" opacity=".12"/>
+    <path d="${pd}" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-line" id="s3-cline"/>
+    ${dots}</svg>`;
+
+  document.getElementById("s3-result").innerHTML=`
+    <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">
+      <strong style="color:var(--teal)">${DLBL[dis]}</strong> · 현재 ${func*10}% 기능 · 생활습관 개선 ${ls.total}%
+    </div>
+    <div class="recovery-chart">${chart}</div>
+    <div class="rcms">
+      <div class="ms-c"><div class="ms-v">${Math.round(traj[0])}%</div><div class="ms-l">${b.lbl.split(' ')[0]}</div><div class="ms-t">3개월</div></div>
+      <div class="ms-c"><div class="ms-v">${Math.round(traj[2])}%</div><div class="ms-l">${b.lbl.split(' ')[0]}</div><div class="ms-t">6개월</div></div>
+      <div class="ms-c"><div class="ms-v">${Math.round(traj[4])}%</div><div class="ms-l">${b.lbl.split(' ')[0]}</div><div class="ms-t">12개월</div></div>
+    </div>
+    <div class="hope-box">
+      <div class="hope-icon">🌟</div>
+      <div class="hope-text">${b.hope}</div>
+    </div>
+    <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;text-align:center">
+      일상 복귀 예상: <strong style="color:var(--teal)">${retTxt}</strong> · 생활습관 개선 효과: <strong style="color:var(--teal)">${ls.total}%</strong> 반영
+    </div>`;
+}
+
+</script>
+</body>
+</html>
