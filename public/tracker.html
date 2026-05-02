@@ -806,6 +806,10 @@ function saveLog(){
   if(idx>=0)logs[idx]=entry;else logs.push(entry);
   logs.sort((a,b)=>b.week.localeCompare(a.week));
   localStorage.setItem("snubh_logs",JSON.stringify(logs));
+  // ── 트래커 로그 자동 저장 (로그인 시) ──
+  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+    try{ window.snubhAuth.savePrediction("tracker_log", entry); }catch(e){}
+  }
   showMain();
   showToast("✅ 이번 주 기록이 저장되었습니다!");
 }
@@ -890,20 +894,7 @@ function resetProfile(){
 
 </script>
 <script src="/auth.js"></script>
-<script>
-// ── 트래커 로그 저장 시 서버 자동 동기화 ──
-(function(){
-  const _origSaveLog = window.saveLog;
-  if(typeof _origSaveLog === "function"){
-    window.saveLog = function(){
-      _origSaveLog.apply(this, arguments);
-      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-        var logs = localStorage.getItem("snubh_logs");
-        if(logs) window.snubhAuth.savePrediction("tracker_logs", JSON.parse(logs));
-      }
-    };
-  }
-})();
-</script>
+</body>
+</html>
 </body>
 </html>

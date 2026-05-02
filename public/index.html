@@ -1100,6 +1100,12 @@ async function calcS1(){
   });
 
   btn.disabled=false; btn.textContent="AI 위험도 예측하기 →";
+
+  // ── Stage 1 자동 저장 (로그인 시) ──
+  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+    var _s1data = localStorage.getItem("snubh_last_scores");
+    if(_s1data){ try{ window.snubhAuth.savePrediction("stage1", JSON.parse(_s1data)); }catch(e){} }
+  }
 }
 
 async function callPredict(model,features){
@@ -1150,6 +1156,11 @@ function calcS2(){
       <div class="tx-card"><div class="tx-val tx-g">${Math.round(surv)}%</div><div class="tx-lbl">1년 생존율</div></div>
     </div>
     <div style="font-size:.63rem;color:var(--muted);margin-top:.7rem">ACC/AHA·ASA·ADA 임상 가이드라인 기반</div>`;
+
+  // ── Stage 2 자동 저장 (로그인 시) ──
+  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+    try{ window.snubhAuth.savePrediction("stage2", {disease:dis, severity:sev, treatment:tx, age:age, bmi:bmiV, comorbidities:co, success:Math.round(success), complication:Math.round(comp), hospitalization:hosp, survival:Math.round(surv), timestamp:new Date().toISOString()}); }catch(e){}
+  }
 }
 
 // ══════════════════════════
@@ -1224,44 +1235,14 @@ function calcS3(){
     <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;text-align:center">
       일상 복귀 예상: <strong style="color:var(--teal)">${retTxt}</strong> · 생활습관 개선 효과: <strong style="color:var(--teal)">${ls.total}%</strong> 반영
     </div>`;
+
+  // ── Stage 3 자동 저장 (로그인 시) ──
+  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+    try{ window.snubhAuth.savePrediction("stage3", {disease:dis, months:mo, currentFunction:func, age:age, support:sup, rehab:rehab, trajectory:traj, returnEstimate:retTxt, lifestyleScore:ls.total, timestamp:new Date().toISOString()}); }catch(e){}
+  }
 }
 
 </script>
 <script src="/auth.js"></script>
-<script>
-// ── 예측 결과 자동 저장 훅 (로그인 시) ──
-(function(){
-  const _origCalcS1 = window.calcS1;
-  if(typeof _origCalcS1 === "function"){
-    window.calcS1 = async function(){
-      await _origCalcS1.apply(this, arguments);
-      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-        const scores = localStorage.getItem("snubh_last_scores");
-        if(scores) window.snubhAuth.savePrediction("stage1", JSON.parse(scores));
-      }
-    };
-  }
-  const _origCalcS2 = window.calcS2;
-  if(typeof _origCalcS2 === "function"){
-    window.calcS2 = function(){
-      _origCalcS2.apply(this, arguments);
-      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-        const el = document.getElementById("s2-result");
-        if(el && el.innerHTML) window.snubhAuth.savePrediction("stage2", {html:el.innerHTML, timestamp:new Date().toISOString()});
-      }
-    };
-  }
-  const _origCalcS3 = window.calcS3;
-  if(typeof _origCalcS3 === "function"){
-    window.calcS3 = function(){
-      _origCalcS3.apply(this, arguments);
-      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-        const el = document.getElementById("s3-result");
-        if(el && el.innerHTML) window.snubhAuth.savePrediction("stage3", {html:el.innerHTML, timestamp:new Date().toISOString()});
-      }
-    };
-  }
-})();
-</script>
 </body>
 </html>
