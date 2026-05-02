@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 
 type Bindings = {
   DB: D1Database
+  ASSETS: Fetcher
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -196,9 +197,11 @@ app.get('/api/models', (c) => {
 // STATIC FILES (HTML pages)
 // ══════════════════════════════════════════
 
-// Serve static HTML pages
+// Root route - serve index.html directly to avoid redirect loop
+// Cloudflare Pages 308 redirects /index.html → / so we must handle / in worker
 app.get('/', async (c) => {
-  return c.redirect('/index.html')
+  // Return the asset from the static files
+  return c.env.ASSETS.fetch(new Request(new URL('/index.html', c.req.url)))
 })
 
 export default app

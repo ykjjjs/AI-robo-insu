@@ -145,8 +145,8 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <span style="font-size:22px">📊</span>
 <h1>건강 트래커 <span>— SNUBH 5대질환</span></h1>
 <div class="nav-links">
-<a href="index.html">← 예측 시뮬레이터</a>
-<a href="AI_Robo_insurance.html" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
+<a href="/">← 예측 시뮬레이터</a>
+<a href="/AI_Robo_insurance" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
 </div>
 </div>
 <div class="container">
@@ -469,7 +469,7 @@ function renderSyncStatus(){
     <span style="color:#8b949e">최고위험: ${dis} ${Math.round((prof.risks?.[prof.topDisease]||0)*100)}%</span>
     <span style="color:#8b949e">|</span>
     <span style="color:#8b949e">운동지수 ${prof.exScore||0} · 스트레스 ${prof.stressScore||0}%</span>
-    <a href="index.html" style="margin-left:auto;color:#58a6ff;font-size:11px;text-decoration:none">→ 예측기에서 재측정</a>`;
+    <a href="/" style="margin-left:auto;color:#58a6ff;font-size:11px;text-decoration:none">→ 예측기에서 재측정</a>`;
   const container=document.querySelector(".container");
   if(container) container.insertBefore(bar, container.firstChild);
 }
