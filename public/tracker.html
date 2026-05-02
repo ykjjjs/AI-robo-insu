@@ -888,7 +888,22 @@ function resetProfile(){
   location.reload();
 }
 
-window.addEventListener("DOMContentLoaded",init);
+</script>
+<script src="/auth.js"></script>
+<script>
+// ── 트래커 로그 저장 시 서버 자동 동기화 ──
+(function(){
+  const _origSaveLog = window.saveLog;
+  if(typeof _origSaveLog === "function"){
+    window.saveLog = function(){
+      _origSaveLog.apply(this, arguments);
+      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+        var logs = localStorage.getItem("snubh_logs");
+        if(logs) window.snubhAuth.savePrediction("tracker_logs", JSON.parse(logs));
+      }
+    };
+  }
+})();
 </script>
 </body>
 </html>

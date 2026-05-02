@@ -1227,5 +1227,41 @@ function calcS3(){
 }
 
 </script>
+<script src="/auth.js"></script>
+<script>
+// ── 예측 결과 자동 저장 훅 (로그인 시) ──
+(function(){
+  const _origCalcS1 = window.calcS1;
+  if(typeof _origCalcS1 === "function"){
+    window.calcS1 = async function(){
+      await _origCalcS1.apply(this, arguments);
+      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+        const scores = localStorage.getItem("snubh_last_scores");
+        if(scores) window.snubhAuth.savePrediction("stage1", JSON.parse(scores));
+      }
+    };
+  }
+  const _origCalcS2 = window.calcS2;
+  if(typeof _origCalcS2 === "function"){
+    window.calcS2 = function(){
+      _origCalcS2.apply(this, arguments);
+      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+        const el = document.getElementById("s2-result");
+        if(el && el.innerHTML) window.snubhAuth.savePrediction("stage2", {html:el.innerHTML, timestamp:new Date().toISOString()});
+      }
+    };
+  }
+  const _origCalcS3 = window.calcS3;
+  if(typeof _origCalcS3 === "function"){
+    window.calcS3 = function(){
+      _origCalcS3.apply(this, arguments);
+      if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
+        const el = document.getElementById("s3-result");
+        if(el && el.innerHTML) window.snubhAuth.savePrediction("stage3", {html:el.innerHTML, timestamp:new Date().toISOString()});
+      }
+    };
+  }
+})();
+</script>
 </body>
 </html>
