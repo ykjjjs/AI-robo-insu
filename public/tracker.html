@@ -112,7 +112,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <body>
 <div id="setup-screen" style="display:none">
 <div class="setup-card">
-<h1>🌱 건강 트래커 시작</h1>
+<h1>건강 트래커 시작</h1>
 <p class="sub">주간 건강지표를 기록하고 생활습관 변화가<br>질환 위험도에 미치는 영향을 추적합니다.</p>
 <div class="setup-field">
 <label>이름 (닉네임)</label>
@@ -121,11 +121,11 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <div class="setup-field">
 <label>추적할 목표 질환</label>
 <div class="disease-grid">
-<div class="disease-opt" onclick="toggleDisease(this)" data-d="심혈관질환">❤️ 심혈관질환</div>
-<div class="disease-opt" onclick="toggleDisease(this)" data-d="뇌졸중">🧠 뇌졸중</div>
-<div class="disease-opt" onclick="toggleDisease(this)" data-d="당뇨">🩸 당뇨</div>
-<div class="disease-opt" onclick="toggleDisease(this)" data-d="파킨슨">🫀 파킨슨</div>
-<div class="disease-opt" onclick="toggleDisease(this)" data-d="알츠하이머">💜 알츠하이머</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="심혈관질환">심혈관질환</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="뇌졸중">뇌졸중</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="당뇨">당뇨</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="파킨슨">파킨슨</div>
+<div class="disease-opt" onclick="toggleDisease(this)" data-d="알츠하이머">알츠하이머</div>
 </div>
 </div>
 <div class="setup-field">
@@ -142,16 +142,15 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div>
 <div id="main-app" style="display:none">
 <div class="header">
-<span style="font-size:22px">📊</span>
 <h1>건강 트래커 <span>— SNUBH 5대질환</span></h1>
 <div class="nav-links">
 <a href="/">← 예측 시뮬레이터</a>
-<a href="/AI_Robo_insurance" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
+<a href="/AI_Robo_insurance" style="color:#00d4ff">AI 로보틱스 보험</a>
 </div>
 </div>
 <div class="container">
 <div class="profile-banner" id="profile-banner">
-<div class="profile-avatar" id="prof-icon">🌱</div>
+<div class="profile-avatar" id="prof-icon"></div>
 <div class="profile-info">
 <h2 id="prof-name">—</h2>
 <p id="prof-disease">목표 질환: —</p>
@@ -164,14 +163,14 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div>
 </div>
 <div class="streak-row" id="streak-row">
-<div class="streak-badge" id="str-exercise"><div class="num">0</div><div class="lbl">🏃 운동 연속</div></div>
-<div class="streak-badge" id="str-nosmoking"><div class="num">0</div><div class="lbl">🚭 금연 연속</div></div>
-<div class="streak-badge" id="str-alcohol"><div class="num">0</div><div class="lbl">🍃 절주 연속</div></div>
-<div class="streak-badge" id="str-diet"><div class="num">0</div><div class="lbl">🥗 식단 연속</div></div>
+<div class="streak-badge" id="str-exercise"><div class="num">0</div><div class="lbl">운동 연속</div></div>
+<div class="streak-badge" id="str-nosmoking"><div class="num">0</div><div class="lbl">금연 연속</div></div>
+<div class="streak-badge" id="str-alcohol"><div class="num">0</div><div class="lbl">절주 연속</div></div>
+<div class="streak-badge" id="str-diet"><div class="num">0</div><div class="lbl">식단 연속</div></div>
 </div>
 <div class="grid-3 section-gap" id="risk-cards">
 <div class="card">
-<div class="card-title">❤️ 심혈관 위험도</div>
+<div class="card-title">심혈관 위험도</div>
 <div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-cardio-val">—</div>
 <div class="risk-bar-wrap">
 <div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
@@ -180,7 +179,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <div id="risk-cardio-delta" class="delta-neu" style="margin-top:6px;font-size:12px">베이스라인 대비: —</div>
 </div>
 <div class="card">
-<div class="card-title">🧠 뇌졸중 위험도</div>
+<div class="card-title">뇌졸중 위험도</div>
 <div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-stroke-val">—</div>
 <div class="risk-bar-wrap">
 <div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
@@ -189,7 +188,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <div id="risk-stroke-delta" class="delta-neu" style="margin-top:6px;font-size:12px">베이스라인 대비: —</div>
 </div>
 <div class="card">
-<div class="card-title">🩸 당뇨 위험도</div>
+<div class="card-title">당뇨 위험도</div>
 <div style="font-size:28px;font-weight:800;margin-bottom:8px" id="risk-diabetes-val">—</div>
 <div class="risk-bar-wrap">
 <div class="risk-bar-label"><span>낮음</span><span>높음</span></div>
@@ -200,7 +199,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div>
 <div class="grid-2 section-gap">
 <div class="card">
-<div class="card-title">📈 주간 생활지표 추이</div>
+<div class="card-title">주간 생활지표 추이</div>
 <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap" id="metric-btns">
 <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('weight','#58a6ff')" id="mbtn-weight">체중</button>
 <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setMetric('exercise','#3fb950')" id="mbtn-exercise">운동지수</button>
@@ -212,7 +211,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <p class="tip" id="trend-tip">지표를 선택하면 주간 추이를 볼 수 있습니다.</p>
 </div>
 <div class="card">
-<div class="card-title">🎯 위험도 변화 추이</div>
+<div class="card-title">위험도 변화 추이</div>
 <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap" id="risk-btns">
 <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setRiskChart('cardio','#f85149')" id="rbtn-cardio">심혈관</button>
 <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="setRiskChart('stroke','#ffa657')" id="rbtn-stroke">뇌졸중</button>
@@ -223,10 +222,10 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div>
 </div>
 <div class="card section-gap">
-<div class="card-title">📝 이번 주 기록 입력</div>
-<div id="already-logged-banner" style="display:none;background:#0d2117;border:1px solid var(--green);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--green)">✅ 이번 주 기록이 이미 있습니다. 수정하려면 아래에서 덮어씁니다.</div>
+<div class="card-title">이번 주 기록 입력</div>
+<div id="already-logged-banner" style="display:none;background:#0d2117;border:1px solid var(--green);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--green)">이번 주 기록이 이미 있습니다. 수정하려면 아래에서 덮어씁니다.</div>
 <div class="form-section">
-<h3>🏋️ 신체 & 운동</h3>
+<h3>신체 & 운동</h3>
 <div class="form-row">
 <div class="field"><label>체중 (kg)</label><input type="number" id="f-weight" placeholder="70.0" step="0.1" min="30" max="200"></div>
 <div class="field"><label>허리둘레 (cm, 선택)</label><input type="number" id="f-waist" placeholder="80" min="40" max="200"></div>
@@ -248,19 +247,19 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div></div>
 </div>
 <div class="form-section">
-<h3>🚭 흡연 & 음주</h3>
+<h3>흡연 & 음주</h3>
 <div class="form-row">
 <div class="field"><label>흡연 여부</label>
 <div class="toggle-row">
-<button id="smoke-no" class="active" onclick="setSmoking(false)">🚭 비흡연</button>
-<button id="smoke-yes" onclick="setSmoking(true)">🚬 흡연 중</button>
+<button id="smoke-no" class="active" onclick="setSmoking(false)">비흡연</button>
+<button id="smoke-yes" onclick="setSmoking(true)">흡연 중</button>
 </div></div>
 <div class="field"><label>이번 주 총 음주량 (잔)</label><input type="number" id="f-alcohol" placeholder="0" min="0" max="100" oninput="calcWeeklyAlc()"></div>
 </div>
 <div id="alc-preview" style="margin-top:4px;font-size:12px;color:var(--muted)"></div>
 </div>
 <div class="form-section">
-<h3>🥗 식단 & 카페인</h3>
+<h3>식단 & 카페인</h3>
 <div class="form-row">
 <div class="field"><label>나쁜 식습관 (0-10)</label>
 <input type="range" id="f-bad-diet" min="0" max="10" value="5" oninput="updateDietPreview()">
@@ -278,7 +277,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div></div>
 </div>
 <div class="form-section">
-<h3>🧠 컨디션 & 스트레스</h3>
+<h3>컨디션 & 스트레스</h3>
 <div class="form-row">
 <div class="field"><label>주관적 컨디션 (1-10)</label><input type="range" id="f-condition" min="1" max="10" value="6" oninput="document.getElementById('cond-lbl').textContent=this.value+' / 10'">
 <div class="unit" id="cond-lbl">6 / 10</div>
@@ -301,12 +300,12 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 </div>
 <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px">
 <button class="btn btn-ghost" onclick="clearForm()">초기화</button>
-<button class="btn btn-green" onclick="saveLog()">💾 이번 주 저장</button>
+<button class="btn btn-green" onclick="saveLog()">이번 주 저장</button>
 </div>
 </div>
 <div class="card section-gap">
 <div style="display:flex;align-items:center;margin-bottom:16px">
-<div class="card-title" style="margin-bottom:0;flex:1">📅 기록 히스토리</div>
+<div class="card-title" style="margin-bottom:0;flex:1">기록 히스토리</div>
 <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="exportCSV()">CSV 내보내기</button>
 </div>
 <div style="overflow-x:auto">
@@ -327,7 +326,7 @@ body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,san
 <p class="tip" id="no-logs-tip" style="text-align:center;padding:24px 0">아직 기록이 없습니다. 위 양식을 작성하고 저장하세요.</p>
 </div>
 <div class="card section-gap">
-<div class="card-title">💡 AI 건강 인사이트</div>
+<div class="card-title">AI 건강 인사이트</div>
 <div id="insight-panel">
 <p style="color:var(--muted);font-size:13px">기록이 2주 이상 쌓이면 개인화된 인사이트를 표시합니다.</p>
 </div>
@@ -433,7 +432,7 @@ function showImportBanner(prof){
   banner.id="import-banner";
   banner.style.cssText="background:#1c2d4a;border:1px solid #2d4a7a;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#79b8ff;line-height:1.6";
   const topD=DISEASE_MAP[prof.topDisease]||"—";
-  banner.innerHTML=`🔗 <strong>예측 시뮬레이터 데이터 감지</strong> — 나이 ${prof.age}세, BMI ${prof.bmi}, 최고위험 ${topD}<br>
+  banner.innerHTML=` <strong>예측 시뮬레이터 데이터 감지</strong> — 나이 ${prof.age}세, BMI ${prof.bmi}, 최고위험 ${topD}<br>
     <span style="color:#8b949e">목표 질환이 자동 선택되었습니다. 이름을 입력하고 시작하세요.</span>`;
   const card=document.querySelector(".setup-card");
   if(card) card.insertBefore(banner, card.querySelector("h1").nextSibling);
@@ -463,8 +462,7 @@ function renderSyncStatus(){
   bar.id="sync-status-bar";
   bar.style.cssText="background:#1c2d4a;border:1px solid #2d4a7a;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap";
   const dis=DISEASE_MAP[prof.topDisease]||"—";
-  bar.innerHTML=`<span style="font-size:16px">🔗</span>
-    <span style="color:#79b8ff"><strong>예측 시뮬레이터와 연결됨</strong> — ${prof.date} 예측 데이터 반영 중</span>
+  bar.innerHTML=`<span style="color:#79b8ff"><strong>예측 시뮬레이터와 연결됨</strong> — ${prof.date} 예측 데이터 반영 중</span>
     <span style="color:#8b949e">|</span>
     <span style="color:#8b949e">최고위험: ${dis} ${Math.round((prof.risks?.[prof.topDisease]||0)*100)}%</span>
     <span style="color:#8b949e">|</span>
@@ -497,12 +495,16 @@ function saveProfile(){
     baseline=JSON.parse(sc);
   }
 
+  pushToServer("tracker_profile", profile);   // 다른 기기에서도 복원되도록 서버 저장
+  // 최초 설정 경로에서도 주간 기록 폼을 예측기 값으로 자동 채운다
+  // (init() 경로에만 있어서 첫 사용자는 빈 폼을 보던 문제)
+  try{ prefillFormFromPredictor(); }catch(e){ console.warn("[트래커] 폼 자동입력 실패", e); }
   showMain();
 }
 function renderProfile(){
   if(!profile.name)return;
-  const icons={"심혈관질환":"❤️","뇌졸중":"🧠","당뇨":"🩸","파킨슨":"🫀","알츠하이머":"💜"};
-  document.getElementById("prof-icon").textContent=icons[profile.diseases[0]]||"🌱";
+  // 아바타는 이름 첫 글자로 표시한다 (이전엔 질환별 이모지였다)
+  document.getElementById("prof-icon").textContent=(profile.name||"").trim().charAt(0)||"·";
   document.getElementById("prof-name").textContent=profile.name+" 님";
   document.getElementById("prof-disease").textContent="목표: "+profile.diseases.join(", ");
   const days=Math.floor((Date.now()-new Date(profile.startDate).getTime())/86400000);
@@ -744,7 +746,7 @@ function calcWeeklyEx(){
 function calcWeeklyAlc(){
   const u=parseFloat(document.getElementById("f-alcohol").value)||0;
   const el=document.getElementById("alc-preview");
-  if(u===0){el.textContent="이번 주 음주 없음 🎉";el.style.color="#3fb950";return;}
+  if(u===0){el.textContent="이번 주 음주 없음";el.style.color="#3fb950";return;}
   if(u<=7){el.textContent=`${u}잔 — 적정 수준`;el.style.color="#d29922";}
   else if(u<=14){el.textContent=`${u}잔 — 주의 필요`;el.style.color="#ffa657";}
   else{el.textContent=`${u}잔 — 과음. 심혈관·간 건강 위험`;el.style.color="#f85149";}
@@ -807,11 +809,11 @@ function saveLog(){
   logs.sort((a,b)=>b.week.localeCompare(a.week));
   localStorage.setItem("snubh_logs",JSON.stringify(logs));
   // ── 트래커 로그 자동 저장 (로그인 시) ──
-  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-    try{ window.snubhAuth.savePrediction("tracker_log", entry); }catch(e){}
-  }
+  // tracker_log = 이번 주 1건(이력), tracker_logs = 전체 배열(복원용)
+  pushToServer("tracker_log",  entry);
+  pushToServer("tracker_logs", logs);
   showMain();
-  showToast("✅ 이번 주 기록이 저장되었습니다!");
+  showToast("이번 주 기록이 저장되었습니다!");
 }
 function renderLogTable(){
   const tb=document.getElementById("log-tbody");
@@ -845,20 +847,20 @@ function renderInsights(){
   const insights=[];
   if(recent.weight&&prev.weight){
     const d=recent.weight-prev.weight;
-    if(d<-0.5)insights.push({icon:"⚖️",color:"#3fb950",text:`체중이 ${Math.abs(d).toFixed(1)}kg 감소했습니다. 꾸준한 관리가 결실을 맺고 있어요!`});
-    else if(d>1)insights.push({icon:"⚖️",color:"#f85149",text:`체중이 ${d.toFixed(1)}kg 증가했습니다. 식단과 운동을 점검해보세요.`});
+    if(d<-0.5)insights.push({color:"#3fb950",text:`체중이 ${Math.abs(d).toFixed(1)}kg 감소했습니다. 꾸준한 관리가 결실을 맺고 있어요!`});
+    else if(d>1)insights.push({color:"#f85149",text:`체중이 ${d.toFixed(1)}kg 증가했습니다. 식단과 운동을 점검해보세요.`});
   }
-  if(recent.exScore<30)insights.push({icon:"🏃",color:"#ffa657",text:"이번 주 운동량이 부족합니다. WHO 기준 주 150분(중강도) 이상을 목표로 해보세요."});
-  else if(recent.exScore>=70)insights.push({icon:"🏃",color:"#3fb950",text:`운동지수 ${recent.exScore}점! 훌륭한 운동 습관을 유지하고 있습니다.`});
-  if(recent.stress>=4&&prev.stress>=4)insights.push({icon:"🧠",color:"#f85149",text:"2주 연속 높은 스트레스가 감지됩니다. 스트레스는 심혈관·당뇨 위험을 높입니다. 충분한 수면과 이완을 권장합니다."});
-  if(recent.alcUnits>14)insights.push({icon:"🍷",color:"#ffa657",text:`이번 주 음주량(${recent.alcUnits}잔)이 위험 수준입니다. 주 7잔 이하를 권장합니다.`});
-  if(recent.dietScore>=70)insights.push({icon:"🥗",color:"#3fb950",text:"식단점수가 70점 이상입니다. 좋은 식습관이 질환 예방에 가장 강력한 도구입니다!"});
+  if(recent.exScore<30)insights.push({color:"#ffa657",text:"이번 주 운동량이 부족합니다. WHO 기준 주 150분(중강도) 이상을 목표로 해보세요."});
+  else if(recent.exScore>=70)insights.push({color:"#3fb950",text:`운동지수 ${recent.exScore}점! 훌륭한 운동 습관을 유지하고 있습니다.`});
+  if(recent.stress>=4&&prev.stress>=4)insights.push({color:"#f85149",text:"2주 연속 높은 스트레스가 감지됩니다. 스트레스는 심혈관·당뇨 위험을 높입니다. 충분한 수면과 이완을 권장합니다."});
+  if(recent.alcUnits>14)insights.push({color:"#ffa657",text:`이번 주 음주량(${recent.alcUnits}잔)이 위험 수준입니다. 주 7잔 이하를 권장합니다.`});
+  if(recent.dietScore>=70)insights.push({color:"#3fb950",text:"식단점수가 70점 이상입니다. 좋은 식습관이 질환 예방에 가장 강력한 도구입니다!"});
   for(const k of["cardio","stroke","diabetes"]){
     const cur=recent.risks?.[k];const prv=prev.risks?.[k]||baseline[k];
-    if(cur&&prv){const d=cur-prv;if(d<-0.03)insights.push({icon:"🎯",color:"#3fb950",text:`${k==="cardio"?"심혈관":k==="stroke"?"뇌졸중":"당뇨"} 위험도가 지난주 대비 ${Math.round(Math.abs(d)*100)}% 감소했습니다. 계속 유지하세요!`});}
+    if(cur&&prv){const d=cur-prv;if(d<-0.03)insights.push({color:"#3fb950",text:`${k==="cardio"?"심혈관":k==="stroke"?"뇌졸중":"당뇨"} 위험도가 지난주 대비 ${Math.round(Math.abs(d)*100)}% 감소했습니다. 계속 유지하세요!`});}
   }
-  if(!insights.length)insights.push({icon:"✅",color:"#3fb950",text:"전반적으로 건강 지표가 안정적입니다. 꾸준히 유지해주세요!"});
-  panel.innerHTML=insights.map(i=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px;flex-shrink:0">${i.icon}</span><p style="font-size:13px;line-height:1.6;color:var(--text)">${i.text}</p></div>`).join("");
+  if(!insights.length)insights.push({color:"#3fb950",text:"전반적으로 건강 지표가 안정적입니다. 꾸준히 유지해주세요!"});
+  panel.innerHTML=insights.map(i=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)"><span style="width:7px;height:7px;border-radius:50%;background:${i.color};flex-shrink:0;margin-top:7px"></span><p style="font-size:13px;line-height:1.6;color:var(--text)">${i.text}</p></div>`).join("");
 }
 
 function exportCSV(){
@@ -892,9 +894,70 @@ function resetProfile(){
   location.reload();
 }
 
+// ══════════════════════════════════════════
+// 서버(D1)  로컬 동기화
+// 로그인 상태면 다른 기기·브라우저에서도 내 데이터가 복원된다.
+// localStorage에 이미 값이 있으면 로컬을 우선한다(최신 입력 보호).
+// ══════════════════════════════════════════
+async function restoreFromServer(){
+  if(!(window.snubhAuth && window.snubhAuth.isLoggedIn())) return false;
+  let preds;
+  try{ preds = await window.snubhAuth.getUserPredictions(); }
+  catch(e){ return false; }
+  if(!Array.isArray(preds) || !preds.length) return false;
+
+  // API가 created_at DESC로 주므로 각 stage의 첫 등장이 최신본
+  const latest={};
+  for(const p of preds){
+    if(latest[p.stage]!==undefined) continue;
+    try{ latest[p.stage]=JSON.parse(p.result_data); }catch{}
+  }
+  const put=(key,val)=>{
+    if(val==null) return;
+    if(localStorage.getItem(key)) return;      // 로컬 우선
+    localStorage.setItem(key,JSON.stringify(val));
+  };
+  put("snubh_user_profile", latest.profile);
+  put("snubh_last_scores",  latest.stage1);
+  put("snubh_profile",      latest.tracker_profile);
+  put("snubh_logs",         latest.tracker_logs);
+  return true;
+}
+
+// 로컬 → 서버 저장 (로그인 상태에서만)
+function pushToServer(stage, data){
+  if(!(window.snubhAuth && window.snubhAuth.isLoggedIn())) return;
+  try{ window.snubhAuth.savePrediction(stage, data); }catch(e){}
+}
+
+// ══════════════════════════════════════════
+// 부팅 — 이 호출이 없어서 트래커 전체가 백지였다
+// ══════════════════════════════════════════
+async function boot(){
+  try{ await restoreFromServer(); }
+  catch(e){ console.warn("[트래커] 서버 복원 실패 — 로컬 데이터로 계속합니다.", e); }
+  try{
+    init();
+  }catch(e){
+    console.error("[트래커] 초기화 실패", e);
+    // 최후 방어: 백지 화면 대신 설정 화면이라도 띄운다
+    try{
+      document.getElementById("setup-screen").style.display="flex";
+      document.getElementById("main-app").style.display="none";
+    }catch(_){
+      document.body.insertAdjacentHTML("afterbegin",
+        '<div style="padding:24px;color:#f85149;font-size:14px">트래커 초기화 오류: '+
+        (e&&e.message?e.message:e)+'</div>');
+    }
+  }
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded", boot);
+}else{
+  boot();
+}
+
 </script>
 <script src="/auth.js"></script>
-</body>
-</html>
 </body>
 </html>

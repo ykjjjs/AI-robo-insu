@@ -113,9 +113,7 @@ function showSignupModal(){
     <input id="su-name" placeholder="홍길동" maxlength="30" autocomplete="off">
     <label>모바일 번호 <span style="color:#ef4444">*</span></label>
     <input id="su-mobile" placeholder="010-1234-5678" maxlength="13" autocomplete="off">
-    <label>주민등록번호 <span style="color:#ef4444">*</span></label>
-    <input id="su-ssn" placeholder="000000-0000000" maxlength="14" autocomplete="off">
-    <div class="ssn-note">🔒 SHA-256 암호화 저장 — 평문 보관하지 않음</div>
+    <div class="ssn-note">주민등록번호는 수집하지 않습니다 — 이 서비스에 필요하지 않습니다</div>
     <label>아이디 <span style="color:#ef4444">*</span></label>
     <input id="su-user" placeholder="영문/숫자 2~20자" maxlength="20" autocomplete="off">
     <label>비밀번호 (숫자 4자리) <span style="color:#ef4444">*</span></label>
@@ -202,11 +200,10 @@ async function doSignup(){
   errEl.textContent="";
   const name=(document.getElementById("su-name")||{}).value||"";
   const mobile=(document.getElementById("su-mobile")||{}).value||"";
-  const ssn=(document.getElementById("su-ssn")||{}).value||"";
   const username=(document.getElementById("su-user")||{}).value||"";
   const pin=getPin("su");
 
-  if(!name||!mobile||!ssn||!username||pin.length!==4){
+  if(!name||!mobile||!username||pin.length!==4){
     errEl.textContent="모든 필드를 올바르게 입력해주세요.";
     return;
   }
@@ -214,7 +211,7 @@ async function doSignup(){
   try{
     const r=await fetch(API+"/api/auth/signup",{
       method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({name,mobile,ssn,username,pin})
+      body:JSON.stringify({name,mobile,username,pin})
     });
     const d=await r.json();
     if(!r.ok){ errEl.textContent=d.error||"회원가입 실패"; btn.disabled=false; btn.textContent="가입하기"; return; }

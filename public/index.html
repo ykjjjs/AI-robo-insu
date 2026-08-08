@@ -214,8 +214,8 @@ footer a{color:var(--cyan)}
 <nav>
   <div class="nav-brand">SNUBH <span style="color:var(--text);font-weight:400">5대 질환 AI</span></div>
   <div class="nav-links">
-    <a href="/tracker" class="nav-link">📊 건강 트래커</a>
-    <a href="/AI_Robo_insurance" class="nav-link" style="color:#00d4ff">🤖 AI 로보틱스 보험</a>
+    <a href="/tracker" class="nav-link">건강 트래커</a>
+    <a href="/AI_Robo_insurance" class="nav-link" style="color:#00d4ff">AI 로보틱스 보험</a>
   </div>
 </nav>
 
@@ -253,7 +253,7 @@ footer a{color:var(--cyan)}
       <!-- 1. 신체 정보 -->
       <div class="card" data-s="1">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🧬</span> 신체 정보</h3>
+          <h3>신체 정보</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -286,7 +286,7 @@ footer a{color:var(--cyan)}
       <!-- 2. 생활 습관 (흡연·음주·수면) -->
       <div class="card" data-s="1">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🍺</span> 생활 습관</h3>
+          <h3>생활 습관</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -333,11 +333,11 @@ footer a{color:var(--cyan)}
       <!-- 3. 식습관 & 카페인 -->
       <div class="card" data-s="1">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🥗</span> 식습관 & 카페인</h3>
+          <h3>식습관 & 카페인</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
-          <div style="font-size:.72rem;color:var(--red);margin-bottom:.7rem;font-weight:600">⚠ 나쁜 식습관 (절제 권고)</div>
+          <div style="font-size:.72rem;color:var(--red);margin-bottom:.7rem;font-weight:600">나쁜 식습관 (절제 권고)</div>
           <div class="three-col">
             <div class="fg"><label>인스턴트·가공식품<br>(주당 횟수)</label>
               <select id="d-inst" onchange="calcDiet()">
@@ -355,7 +355,7 @@ footer a{color:var(--cyan)}
                 <option value="2">3-4회</option><option value="3">5회+</option>
               </select></div>
           </div>
-          <div style="font-size:.72rem;color:var(--green);margin:.7rem 0;font-weight:600">✅ 좋은 식습관 (실천 권고)</div>
+          <div style="font-size:.72rem;color:var(--green);margin:.7rem 0;font-weight:600">좋은 식습관 (실천 권고)</div>
           <div class="two-col">
             <div class="fg"><label>채소·과일 섭취</label>
               <select id="d-veg" onchange="calcDiet()">
@@ -373,7 +373,7 @@ footer a{color:var(--cyan)}
             <div class="idx-bar-wrap"><div class="idx-bar" id="diet-bar" style="width:55%;background:var(--green)"></div></div>
             <span class="score-chip chip-good" id="diet-chip">55/100</span>
           </div>
-          <div style="font-size:.72rem;color:var(--amber);margin:.9rem 0 .5rem;font-weight:600">☕ 카페인 섭취</div>
+          <div style="font-size:.72rem;color:var(--amber);margin:.9rem 0 .5rem;font-weight:600">카페인 섭취</div>
           <div class="fg"><label>하루 카페인 음료 (커피·차·에너지드링크)</label>
             <select id="s1-caff" onchange="calcCaffeine()">
               <option value="0">없음</option>
@@ -394,7 +394,7 @@ footer a{color:var(--cyan)}
       <!-- 4. 운동 지수 -->
       <div class="card" data-s="1">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🏃</span> 운동 지수 (MET 기반)</h3>
+          <h3>운동 지수 (MET 기반)</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -440,7 +440,7 @@ footer a{color:var(--cyan)}
       <!-- 5. 스트레스 지수 (PSS-5) -->
       <div class="card" data-s="1">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🧠</span> 스트레스 지수 (PSS-5)</h3>
+          <h3>스트레스 지수 (PSS-5)</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -481,12 +481,12 @@ footer a{color:var(--cyan)}
     <!-- RIGHT: RESULTS -->
     <div class="result-panel">
       <div class="rp-title">예측 결과</div>
-      <div id="s1-api" class="api-badge api-warn"><div class="dot"></div> Worker 연결 확인 중...</div>
-      <div id="s1-result"><div class="placeholder">👈 좌측 정보 입력 후<br>예측 버튼 클릭</div></div>
-      <div class="disclaimer">⚠️ BRFSS·NHANES 기반 연구 데모 — 임상 진단 대체 불가</div>
+      <div id="s1-api" class="api-badge api-warn"><div class="dot"></div>Worker 연결 확인 중...</div>
+      <div id="s1-result"><div class="placeholder">좌측 정보 입력 후<br>예측 버튼 클릭</div></div>
+      <div class="disclaimer">BRFSS·NHANES 기반 연구 데모 — 임상 진단 대체 불가</div>
       <div style="margin-top:.8rem;text-align:center;display:flex;flex-direction:column;gap:.5rem">
-        <a href="/tracker" style="font-size:.72rem;color:var(--teal)">📊 결과를 트래커에 저장하기 →</a>
-        <a href="/AI_Robo_insurance" style="font-size:.72rem;color:#00d4ff;font-weight:600">🤖 AI 로보틱스 실비보험 맞춤 설계 →</a>
+        <a href="/tracker" style="font-size:.72rem;color:var(--teal)">결과를 트래커에 저장하기 →</a>
+        <a href="/AI_Robo_insurance" style="font-size:.72rem;color:#00d4ff;font-weight:600">AI 로보틱스 실비보험 맞춤 설계 →</a>
       </div>
     </div>
   </div>
@@ -497,7 +497,7 @@ footer a{color:var(--cyan)}
     <div class="input-panels">
       <div class="card" data-s="2">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🏥</span> 진단 및 치료 정보</h3>
+          <h3>진단 및 치료 정보</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -552,8 +552,8 @@ footer a{color:var(--cyan)}
     </div>
     <div class="result-panel" style="--cyan:var(--purple)">
       <div class="rp-title" style="color:var(--purple)">예후 예측 결과</div>
-      <div id="s2-result"><div class="placeholder">🏥 치료 정보 입력 후<br>예후를 예측합니다</div></div>
-      <div class="disclaimer">⚠️ 임상 문헌 기반 참고치 — 담당 의사와 상담 필수</div>
+      <div id="s2-result"><div class="placeholder">치료 정보 입력 후<br>예후를 예측합니다</div></div>
+      <div class="disclaimer">임상 문헌 기반 참고치 — 담당 의사와 상담 필수</div>
     </div>
   </div>
 </section>
@@ -564,7 +564,7 @@ footer a{color:var(--cyan)}
       <!-- 현재 상태 -->
       <div class="card" data-s="3">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">🌱</span> 현재 상태</h3>
+          <h3>현재 상태</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -605,7 +605,7 @@ footer a{color:var(--cyan)}
       <!-- 재활 & 생활습관 개선 -->
       <div class="card" data-s="3">
         <div class="card-head" onclick="toggle(this)">
-          <h3><span class="icon">💪</span> 재활 & 생활습관 개선 실천</h3>
+          <h3>재활 & 생활습관 개선 실천</h3>
           <span class="card-toggle">▲</span>
         </div>
         <div class="card-body">
@@ -616,7 +616,7 @@ footer a{color:var(--cyan)}
               <option value="high">집중 (주 5회+)</option>
             </select></div>
 
-          <div class="sect-hdr">🏃 운동 실천</div>
+          <div class="sect-hdr">운동 실천</div>
           <div class="two-col">
             <div class="fg"><label>이번 주 운동 일수</label>
               <select id="r-exdays" onchange="calcLifestyle()">
@@ -632,7 +632,7 @@ footer a{color:var(--cyan)}
               </select></div>
           </div>
 
-          <div class="sect-hdr">🚭 금연 & 절주</div>
+          <div class="sect-hdr">금연 & 절주</div>
           <div class="two-col">
             <div class="fg"><label>금연 유지</label>
               <select id="r-nosmo" onchange="calcLifestyle()">
@@ -648,7 +648,7 @@ footer a{color:var(--cyan)}
               </select></div>
           </div>
 
-          <div class="sect-hdr">🥗 식습관 개선</div>
+          <div class="sect-hdr">식습관 개선</div>
           <div class="fg">
             <label>나쁜 식습관 절제 <span id="sv-bad" style="color:var(--amber);font-weight:700">5</span>/10
               <span style="font-size:.62rem;color:var(--muted)">(인스턴트·탄산·카페인과다·기름진 음식 줄이기)</span></label>
@@ -672,13 +672,13 @@ footer a{color:var(--cyan)}
           <div style="margin-top:.7rem">
             <div style="font-size:.7rem;color:var(--muted);margin-bottom:.4rem">생활습관 개선 종합 지수</div>
             <div class="li-grid" id="li-grid">
-              <div class="li-card"><div class="lc-head"><span class="lc-icon">🏃</span><span class="lc-title">운동</span><span class="lc-score" id="li-ex" style="color:var(--teal)">57%</span></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-title">운동</span><span class="lc-score" id="li-ex" style="color:var(--teal)">57%</span></div>
                 <div class="li-track"><div class="li-fill" id="li-ex-bar" style="width:57%"></div></div></div>
-              <div class="li-card"><div class="lc-head"><span class="lc-icon">🚭</span><span class="lc-title">금연</span><span class="lc-score" id="li-sm" style="color:var(--green)">100%</span></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-title">금연</span><span class="lc-score" id="li-sm" style="color:var(--green)">100%</span></div>
                 <div class="li-track"><div class="li-fill" id="li-sm-bar" style="width:100%"></div></div></div>
-              <div class="li-card"><div class="lc-head"><span class="lc-icon">🍺</span><span class="lc-title">절주</span><span class="lc-score" id="li-al" style="color:var(--green)">100%</span></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-title">절주</span><span class="lc-score" id="li-al" style="color:var(--green)">100%</span></div>
                 <div class="li-track"><div class="li-fill" id="li-al-bar" style="width:100%"></div></div></div>
-              <div class="li-card"><div class="lc-head"><span class="lc-icon">🥗</span><span class="lc-title">식습관</span><span class="lc-score" id="li-di" style="color:var(--amber)">50%</span></div>
+              <div class="li-card"><div class="lc-head"><span class="lc-title">식습관</span><span class="lc-score" id="li-di" style="color:var(--amber)">50%</span></div>
                 <div class="li-track"><div class="li-fill" id="li-di-bar" style="width:50%"></div></div></div>
             </div>
             <div style="text-align:center;margin-top:.3rem">
@@ -693,7 +693,7 @@ footer a{color:var(--cyan)}
 
     <div class="result-panel" style="--cyan:var(--teal)">
       <div class="rp-title" style="color:var(--teal)">회복 궤적</div>
-      <div id="s3-result"><div class="placeholder">🌱 재활 정보 입력 후<br>회복 궤적을 예측합니다</div></div>
+      <div id="s3-result"><div class="placeholder">재활 정보 입력 후<br>회복 궤적을 예측합니다</div></div>
     </div>
   </div>
 </section>
@@ -705,7 +705,7 @@ footer a{color:var(--cyan)}
     <div class="mc"><div class="mc-h"><span class="mc-name">뇌혈관</span><span class="mc-auc" style="color:var(--cyan)">0.83</span></div><div class="mc-data">BRFSS 2020 · 246K+</div></div>
     <div class="mc"><div class="mc-h"><span class="mc-name">당뇨 S1</span><span class="mc-auc" style="color:var(--cyan)">0.81</span></div><div class="mc-data">BRFSS 2020 · 246K+</div></div>
     <div class="mc"><div class="mc-h"><span class="mc-name">당뇨족부 S2</span><span class="mc-auc" style="color:var(--cyan)">0.83</span></div><div class="mc-data">BRFSS 당뇨 서브셋 · 32K+</div></div>
-    <div class="mc"><div class="mc-h"><span class="mc-name">파킨슨</span><span class="mc-auc" style="color:var(--amber)">0.56⚠</span></div><div class="mc-data">UCI Telemonitoring · n=42</div></div>
+    <div class="mc"><div class="mc-h"><span class="mc-name">파킨슨</span><span class="mc-auc" style="color:var(--amber)">0.56</span></div><div class="mc-data">UCI Telemonitoring · n=42</div></div>
     <div class="mc"><div class="mc-h"><span class="mc-name">알츠하이머</span><span class="mc-auc" style="color:var(--cyan)">0.84</span></div><div class="mc-data">NHANES 2017-18</div></div>
   </div>
 </div>
@@ -786,7 +786,7 @@ function showSyncNote(stage,prof){
     if(sec){const fp=sec.querySelector(".input-panels");if(fp)fp.prepend(el);}
   }
   const dis={"cardio":"심혈관","stroke":"뇌졸중","diabetes":"당뇨","parkinson":"파킨슨","alzheimer":"알츠하이머"};
-  el.innerHTML=`<span style="font-size:1rem">🔗</span> Stage 1 정보 자동 반영됨 — 나이 <strong>${prof.age}세</strong>, BMI <strong>${prof.bmi||"—"}</strong>, 최고위험 <strong>${dis[prof.topDisease]||"—"}</strong> · <a href="#" onclick="document.getElementById('${sid}').style.display='none';return false" style="color:#8b949e;margin-left:4px">닫기</a>`;
+  el.innerHTML=`Stage 1 정보 자동 반영됨 — 나이 <strong>${prof.age}세</strong>, BMI <strong>${prof.bmi||"—"}</strong>, 최고위험 <strong>${dis[prof.topDisease]||"—"}</strong> · <a href="#" onclick="document.getElementById('${sid}').style.display='none';return false" style="color:#8b949e;margin-left:4px">닫기</a>`;
 }
 
 // ── Card collapse
@@ -909,7 +909,7 @@ function calcExercise(){
   chip.textContent=score>60?"충분":score>30?"보통":"부족";
   chip.className="score-chip "+(score>60?"chip-good":score>30?"chip-warn":"chip-bad");
   const who=days*mins*(int===1?1.0:int===2?1.0:0.5);
-  document.getElementById("ex-met").textContent=who>=150?"✅ WHO 권고 충족":who>=75?"⚠️ WHO 권고 미달":"❌ 운동 부족";
+  document.getElementById("ex-met").textContent=who>=150?"WHO 권고 충족":who>=75?"WHO 권고 미달":"운동 부족";
   document.getElementById("hs-ex").textContent=score;
   document.getElementById("hs-ex").style.color=score>60?"var(--green)":score>30?"var(--amber)":"var(--red)";
 }
@@ -949,9 +949,9 @@ async function checkWorker(){
   const el=document.getElementById("s1-api");
   try{
     const r=await fetch(WORKER_URL+"/api/health",{signal:AbortSignal.timeout(5000)});
-    if(r.ok){el.className="api-badge api-ok";el.innerHTML='<div class="dot"></div> Worker 연결됨';}
+    if(r.ok){el.className="api-badge api-ok";el.innerHTML='<div class="dot"></div>Worker 연결됨';}
     else throw 0;
-  }catch{el.className="api-badge api-err";el.innerHTML='<div class="dot"></div> 미연결 (sigmoid 추정)';}
+  }catch{el.className="api-badge api-err";el.innerHTML='<div class="dot"></div>미연결 (sigmoid 추정)';}
 }
 checkWorker();
 
@@ -1008,7 +1008,7 @@ async function calcS1(){
   const dietScore=Math.max(0,Math.min(1,dietGood-dietBad+0.5));
 
   const btn=document.getElementById("s1-btn");
-  btn.disabled=true; btn.textContent="⏳ 추론 중...";
+  btn.disabled=true; btn.textContent="추론 중...";
 
   const ac=ageCategory(age);
   const brfss={BMI:bmiVal,PhysicalHealth:0,MentalHealth:mentalDays,SleepTime:sleep,
@@ -1102,9 +1102,11 @@ async function calcS1(){
   btn.disabled=false; btn.textContent="AI 위험도 예측하기 →";
 
   // ── Stage 1 자동 저장 (로그인 시) ──
+  // 점수(stage1)와 상세 프로필(profile)을 함께 올려야 다른 기기에서도 트래커가
+  // 배너·목표질환 자동선택까지 복원한다. (이전엔 stage1만 올려 프로필이 유실됐다)
   if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-    var _s1data = localStorage.getItem("snubh_last_scores");
-    if(_s1data){ try{ window.snubhAuth.savePrediction("stage1", JSON.parse(_s1data)); }catch(e){} }
+    try{ window.snubhAuth.savePrediction("stage1", lastScores); }catch(e){}
+    try{ window.snubhAuth.savePrediction("profile", userProfile); }catch(e){}
   }
 }
 
@@ -1229,11 +1231,10 @@ function calcS3(){
       <div class="ms-c"><div class="ms-v">${Math.round(traj[4])}%</div><div class="ms-l">${b.lbl.split(' ')[0]}</div><div class="ms-t">12개월</div></div>
     </div>
     <div class="hope-box">
-      <div class="hope-icon">🌟</div>
       <div class="hope-text">${b.hope}</div>
     </div>
     <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;text-align:center">
-      일상 복귀 예상: <strong style="color:var(--teal)">${retTxt}</strong> · 생활습관 개선 효과: <strong style="color:var(--teal)">${ls.total}%</strong> 반영
+      일상 복귀 예상: <strong style="color:var(--teal)">${retTxt}</strong> · 생활습관 개선 효과: <strong style="color:var(--teal)">${ls.total}%</strong>반영
     </div>`;
 
   // ── Stage 3 자동 저장 (로그인 시) ──
