@@ -113,7 +113,7 @@ function showSignupModal(){
     <input id="su-name" placeholder="홍길동" maxlength="30" autocomplete="off">
     <label>모바일 번호 <span style="color:#ef4444">*</span></label>
     <input id="su-mobile" placeholder="010-1234-5678" maxlength="13" autocomplete="off">
-    <div class="ssn-note">🔒 주민등록번호는 수집하지 않습니다 — 이 서비스에 필요하지 않습니다</div>
+    <div class="ssn-note">주민등록번호는 수집하지 않습니다 — 이 서비스에 필요하지 않습니다</div>
     <label>아이디 <span style="color:#ef4444">*</span></label>
     <input id="su-user" placeholder="영문/숫자 2~20자" maxlength="20" autocomplete="off">
     <label>비밀번호 (숫자 4자리) <span style="color:#ef4444">*</span></label>
