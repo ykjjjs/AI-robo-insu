@@ -497,6 +497,10 @@ function saveProfile(){
     baseline=JSON.parse(sc);
   }
 
+  pushToServer("tracker_profile", profile);   // 다른 기기에서도 복원되도록 서버 저장
+  // 최초 설정 경로에서도 주간 기록 폼을 예측기 값으로 자동 채운다
+  // (init() 경로에만 있어서 첫 사용자는 빈 폼을 보던 문제)
+  try{ prefillFormFromPredictor(); }catch(e){ console.warn("[트래커] 폼 자동입력 실패", e); }
   showMain();
 }
 function renderProfile(){
@@ -807,9 +811,9 @@ function saveLog(){
   logs.sort((a,b)=>b.week.localeCompare(a.week));
   localStorage.setItem("snubh_logs",JSON.stringify(logs));
   // ── 트래커 로그 자동 저장 (로그인 시) ──
-  if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-    try{ window.snubhAuth.savePrediction("tracker_log", entry); }catch(e){}
-  }
+  // tracker_log = 이번 주 1건(이력), tracker_logs = 전체 배열(복원용)
+  pushToServer("tracker_log",  entry);
+  pushToServer("tracker_logs", logs);
   showMain();
   showToast("✅ 이번 주 기록이 저장되었습니다!");
 }
@@ -892,9 +896,70 @@ function resetProfile(){
   location.reload();
 }
 
+// ══════════════════════════════════════════
+// 서버(D1) ↔ 로컬 동기화
+// 로그인 상태면 다른 기기·브라우저에서도 내 데이터가 복원된다.
+// localStorage에 이미 값이 있으면 로컬을 우선한다(최신 입력 보호).
+// ══════════════════════════════════════════
+async function restoreFromServer(){
+  if(!(window.snubhAuth && window.snubhAuth.isLoggedIn())) return false;
+  let preds;
+  try{ preds = await window.snubhAuth.getUserPredictions(); }
+  catch(e){ return false; }
+  if(!Array.isArray(preds) || !preds.length) return false;
+
+  // API가 created_at DESC로 주므로 각 stage의 첫 등장이 최신본
+  const latest={};
+  for(const p of preds){
+    if(latest[p.stage]!==undefined) continue;
+    try{ latest[p.stage]=JSON.parse(p.result_data); }catch{}
+  }
+  const put=(key,val)=>{
+    if(val==null) return;
+    if(localStorage.getItem(key)) return;      // 로컬 우선
+    localStorage.setItem(key,JSON.stringify(val));
+  };
+  put("snubh_user_profile", latest.profile);
+  put("snubh_last_scores",  latest.stage1);
+  put("snubh_profile",      latest.tracker_profile);
+  put("snubh_logs",         latest.tracker_logs);
+  return true;
+}
+
+// 로컬 → 서버 저장 (로그인 상태에서만)
+function pushToServer(stage, data){
+  if(!(window.snubhAuth && window.snubhAuth.isLoggedIn())) return;
+  try{ window.snubhAuth.savePrediction(stage, data); }catch(e){}
+}
+
+// ══════════════════════════════════════════
+// 부팅 — 이 호출이 없어서 트래커 전체가 백지였다
+// ══════════════════════════════════════════
+async function boot(){
+  try{ await restoreFromServer(); }
+  catch(e){ console.warn("[트래커] 서버 복원 실패 — 로컬 데이터로 계속합니다.", e); }
+  try{
+    init();
+  }catch(e){
+    console.error("[트래커] 초기화 실패", e);
+    // 최후 방어: 백지 화면 대신 설정 화면이라도 띄운다
+    try{
+      document.getElementById("setup-screen").style.display="flex";
+      document.getElementById("main-app").style.display="none";
+    }catch(_){
+      document.body.insertAdjacentHTML("afterbegin",
+        '<div style="padding:24px;color:#f85149;font-size:14px">트래커 초기화 오류: '+
+        (e&&e.message?e.message:e)+'</div>');
+    }
+  }
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded", boot);
+}else{
+  boot();
+}
+
 </script>
 <script src="/auth.js"></script>
-</body>
-</html>
 </body>
 </html>

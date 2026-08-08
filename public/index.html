@@ -1102,9 +1102,11 @@ async function calcS1(){
   btn.disabled=false; btn.textContent="AI 위험도 예측하기 →";
 
   // ── Stage 1 자동 저장 (로그인 시) ──
+  // 점수(stage1)와 상세 프로필(profile)을 함께 올려야 다른 기기에서도 트래커가
+  // 배너·목표질환 자동선택까지 복원한다. (이전엔 stage1만 올려 프로필이 유실됐다)
   if(window.snubhAuth && window.snubhAuth.isLoggedIn()){
-    var _s1data = localStorage.getItem("snubh_last_scores");
-    if(_s1data){ try{ window.snubhAuth.savePrediction("stage1", JSON.parse(_s1data)); }catch(e){} }
+    try{ window.snubhAuth.savePrediction("stage1", lastScores); }catch(e){}
+    try{ window.snubhAuth.savePrediction("profile", userProfile); }catch(e){}
   }
 }
 
